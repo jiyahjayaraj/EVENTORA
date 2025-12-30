@@ -1,0 +1,78 @@
+.navbar {
+    height:10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  background: linear-gradient(180deg, #0b0b12, #111118);
+  color: #fff;
+}
+
+/* LEFT */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-box {
+  background: #ff7a18;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ff7a18;
+}
+
+/* CENTER */
+.nav-center {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  font-size: 20px;
+  color: #cbd5e1;
+}
+
+.nav-center li {
+  cursor: pointer;
+}
+
+.nav-center li:hover {
+  color: #ffffff;
+}
+
+/* RIGHT */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-icon {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.signin-btn {
+  background: transparent;
+  border: 1px solid #2a2a35;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.getstarted-btn {
+  background: linear-gradient(90deg, #ff7a18, #ff9f1c);
+  border: none;
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700px;
+}
