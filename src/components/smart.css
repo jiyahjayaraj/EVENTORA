@@ -1,0 +1,107 @@
+/* ==================================
+   TRENDING SECTION – RESPONSIVE
+   ================================== */
+
+/* ---------- Tablets ---------- */
+@media (max-width: 1024px) {
+  /* Section padding */
+  div[style*="padding: 100px 56px"] {
+    padding: 80px 32px !important;
+  }
+
+  /* Layout: slightly tighter */
+  div[style*="display: flex"][style*="min-height: 100vh"] {
+    gap: 40px !important;
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 36px !important;
+  }
+
+  /* Image cards */
+  div[style*="height: 360px"] {
+    width: 230px !important;
+    height: 320px !important;
+  }
+}
+
+/* ---------- Mobile (stack layout) ---------- */
+@media (max-width: 768px) {
+  /* Main layout → column */
+  div[style*="display: flex"][style*="min-height: 100vh"] {
+    flex-direction: column !important;
+    padding: 60px 20px !important;
+  }
+
+  /* Left + Right width */
+  div[style*="width: 50%"] {
+    width: 100% !important;
+  }
+
+  /* Text alignment */
+  h1 {
+    font-size: 30px !important;
+    text-align: center !important;
+  }
+
+  p {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Feature cards */
+  div[style*="box-shadow: 0 8px 24px"] {
+    padding: 14px !important;
+  }
+
+  /* Button full width */
+  button {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Image cards row */
+  div[style*="justify-content: center"][style*="gap: 30px"] {
+    margin-top: 40px !important;
+    gap: 20px !important;
+  }
+
+  /* Image cards resize */
+  div[style*="height: 360px"] {
+    width: 200px !important;
+    height: 300px !important;
+  }
+}
+
+/* ---------- Small Phones ---------- */
+@media (max-width: 480px) {
+  /* Heading */
+  h1 {
+    font-size: 26px !important;
+  }
+
+  /* Paragraph */
+  p {
+    font-size: 14px !important;
+  }
+
+  /* Feature cards → vertical */
+  div[style*="display: flex"][style*="gap: 14px"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Image cards stack */
+  div[style*="justify-content: center"][style*="gap: 30px"] {
+    flex-direction: column !important;
+  }
+
+  /* Image cards full width */
+  div[style*="height: 360px"] {
+    width: 100% !important;
+    max-width: 260px !important;
+    height: 320px !important;
+  }
+}
