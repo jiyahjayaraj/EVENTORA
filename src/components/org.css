@@ -1,0 +1,110 @@
+/* ===============================
+   ORGANIZER – RESPONSIVE STYLES
+   =============================== */
+
+/* Tablets & small laptops */
+@media (max-width: 1024px) {
+  /* Page padding */
+  div[style*="padding: 90px 56px"] {
+    padding: 70px 32px !important;
+  }
+
+  /* Heading */
+  h1 {
+    font-size: 36px !important;
+  }
+
+  /* Features grid: 2 → 1.5 spacing */
+  div[style*="grid-template-columns: repeat(2, 1fr)"] {
+    gap: 20px !important;
+  }
+
+  /* CTA box */
+  div[style*="Ready to create your first event"] {
+    flex-direction: column !important;
+    gap: 20px !important;
+    text-align: center !important;
+  }
+}
+
+/* ===============================
+   MOBILE (phones)
+   =============================== */
+@media (max-width: 768px) {
+  /* Page padding */
+  div[style*="padding: 90px 56px"] {
+    padding: 60px 20px !important;
+  }
+
+  /* Center text width */
+  div[style*="max-width: 720px"] {
+    max-width: 100% !important;
+  }
+
+  /* Main heading */
+  h1 {
+    font-size: 30px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Sub text */
+  p {
+    font-size: 15px !important;
+  }
+
+  /* FEATURES GRID → single column */
+  div[style*="grid-template-columns: repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    margin: 40px auto !important;
+  }
+
+  /* Feature cards */
+  div[style*="box-shadow: 0 10px 30px"] {
+    padding: 18px !important;
+  }
+
+  /* CTA section */
+  div[style*="Ready to create your first event"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 20px !important;
+  }
+
+  /* CTA buttons */
+  button {
+    width: 100% !important;
+    margin: 6px 0 !important;
+  }
+}
+
+/* ===============================
+   SMALL PHONES
+   =============================== */
+@media (max-width: 480px) {
+  /* Badge */
+  div[style*="FOR EVENT ORGANIZERS"] {
+    font-size: 11px !important;
+  }
+
+  /* Heading */
+  h1 {
+    font-size: 26px !important;
+  }
+
+  /* Feature card layout */
+  div[style*="display: flex"][style*="gap: 16px"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Icons */
+  img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* CTA padding */
+  div[style*="border-radius: 16px"] {
+    padding: 22px !important;
+  }
+}

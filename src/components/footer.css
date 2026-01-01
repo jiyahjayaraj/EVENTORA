@@ -1,0 +1,98 @@
+/* ==================================
+   FOOTER – RESPONSIVE STYLES
+   ================================== */
+
+/* ---------- Tablets ---------- */
+@media (max-width: 1024px) {
+  /* Footer grid */
+  div[style*="grid-template-columns: 1.2fr repeat(4, 1fr)"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+    padding: 0 24px !important;
+  }
+
+  /* Bottom bar padding */
+  div[style*="justify-content: space-between"][style*="font-size: 13px"] {
+    padding: 18px 24px !important;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  /* Newsletter spacing */
+  div[style*="padding: 60px 20px"] {
+    padding: 40px 16px !important;
+  }
+
+  /* Newsletter input stack */
+  div[style*="display: flex"][style*="justify-content: center"][style*="gap: 12px"] {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  /* Input + button full width */
+  input {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  button {
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  /* Footer grid → 1 column */
+  div[style*="grid-template-columns: 1.2fr repeat(4, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    margin: 40px auto !important;
+    padding: 0 20px !important;
+    text-align: center !important;
+  }
+
+  /* Brand align center */
+  div[style*="EVENTORA"] {
+    justify-content: center !important;
+  }
+
+  /* Social icons center */
+  div[style*="display: flex"][style*="gap: 12px"][style*="margin-top: 14px"] {
+    justify-content: center !important;
+  }
+
+  /* Column titles spacing */
+  div[style*="font-weight: 600"][style*="margin-bottom: 14px"] {
+    margin-top: 24px !important;
+  }
+
+  /* Bottom bar stack */
+  div[style*="justify-content: space-between"][style*="font-size: 13px"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+    text-align: center !important;
+    padding: 16px 20px !important;
+  }
+}
+
+/* ---------- Small Phones ---------- */
+@media (max-width: 480px) {
+  /* Newsletter heading */
+  div[style*="font-size: 28px"] {
+    font-size: 22px !important;
+  }
+
+  /* Newsletter text */
+  div[style*="font-size: 15px"] {
+    font-size: 14px !important;
+  }
+
+  /* Footer links */
+  div[style*="font-size: 14px"] {
+    font-size: 13px !important;
+  }
+
+  /* Social icons smaller */
+  div[style*="width: 32px"][style*="height: 32px"] {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}

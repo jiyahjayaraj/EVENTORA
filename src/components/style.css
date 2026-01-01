@@ -1,5 +1,5 @@
 .navbar {
-  height: 10vh;
+  height: 7vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -124,7 +124,7 @@
 }
 .hero {
   position: relative;
-  height: 65vh;
+  height: 70vh;
   color: white;
   display: flex;
   align-items: center;
@@ -277,7 +277,7 @@
 
 .trending {
   
-  padding: 40px;
+  padding: 30px;
   background: radial-gradient(circle at top, #0c0c11, #0b0b12);
   color: #fff;
 
@@ -447,7 +447,126 @@
 .search-box i {
   color: #ff6a00;
   font-size: 16px;
+  font-weight: 700px;
 }
 
 
+/* ===============================
+   BROWSE SECTION
+================================ */
 
+.browse {
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  padding: 80px 20px 60px;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 60%),
+    #0b0f14;
+  color: white;
+}
+
+.eyebrow {
+  color: #ff5a1f;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 550;
+}
+
+.browse h1 {
+  font-size: 53px;
+  font-weight: 550;
+  margin: 0 0 20px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #a0aec0;
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===============================
+   CARDS
+================================ */
+
+.card {
+  width: 370px;
+  height: 230px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 30px;
+  position: relative;
+}
+
+.card img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  z-index: 2;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* ===============================
+   RESPONSIVE MEDIA QUERIES
+================================ */
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+  .browse {
+    padding: 60px 16px 40px;
+  }
+
+  .browse h1 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+
+  .card {
+    width: 100%;
+    height: 200px;
+    margin-top: 20px;
+  }
+
+  .overlay {
+    bottom: 16px;
+    left: 16px;
+  }
+}
+
+/* 📲 Tablet */
+@media (max-width: 768px) {
+  .browse h1 {
+    font-size: 38px;
+  }
+
+  .card {
+    width: 48%;
+    height: 220px;
+  }
+}
+
+/* 💻 Small Laptop */
+@media (max-width: 1024px) {
+  .card {
+    width: 45%;
+  }
+}
+
+/* 🖥️ Large Screens */
+@media (min-width: 1440px) {
+  .card {
+    width: 370px;
+  }
+}
