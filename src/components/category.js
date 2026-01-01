@@ -32,86 +32,86 @@ const Category = () => {
             }}>
                 <div className='card'><img src={card1}></img>
                     <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon1}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Entertainment</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>2,450 events</p>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon1}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Entertainment</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>2,450 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Concerts, DJ nights, comedy shows</p>
+                        <p style={{ color: '#a0aec0' }}>Concerts, DJ nights, comedy shows</p>
                     </div>
                 </div>
                 <div className='card'><img src={card2}></img>
-                <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon2}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Education</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>1,890 events</p>
+                    <div className='overlay'>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon2}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Education</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>1,890 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Workshps, seminars, training</p>
+                        <p style={{ color: '#a0aec0' }}>Workshps, seminars, training</p>
                     </div>
                 </div>
                 <div className='card'><img src={card3}></img>
-                <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon3}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Technology</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>980 events</p>
+                    <div className='overlay'>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon3}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Technology</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>980 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Hackathons, AI events, meetups</p>
+                        <p style={{ color: '#a0aec0' }}>Hackathons, AI events, meetups</p>
                     </div>
                 </div>
                 <div className='card'><img src={card4}></img>
-                <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon4}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Business</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>1,240 events</p>
+                    <div className='overlay'>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon4}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Business</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>1,240 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Networking, summits, launches</p>
+                        <p style={{ color: '#a0aec0' }}>Networking, summits, launches</p>
                     </div>
                 </div>
                 <div className='card'><img src={card5}></img>
-                <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon5}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Sports & Fitness</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>760 events</p>
+                    <div className='overlay'>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon5}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Sports & Fitness</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>760 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Marathons, tournaments, cycling</p>
+                        <p style={{ color: '#a0aec0' }}>Marathons, tournaments, cycling</p>
                     </div>
                 </div>
                 <div className='card'><img src={card6}></img>
-                <div className='overlay'>
-                        <div style={{display:'flex'}}>
-                        <img style={{
-                            width: '40px', height: '40px', borderRadius: '10px'
-                        }} src={icon6}></img>
-                        <div  style={{ margin: '0px 20px', }}>
-                            <h3 style={{margin:'0px'}}>Art & Culture</h3>
-                            <p style={{margin:'0px',color:'#a0aec0'}}>1,120 events</p>
+                    <div className='overlay'>
+                        <div style={{ display: 'flex' }}>
+                            <img style={{
+                                width: '40px', height: '40px', borderRadius: '10px'
+                            }} src={icon6}></img>
+                            <div style={{ margin: '0px 20px', }}>
+                                <h3 style={{ margin: '0px' }}>Art & Culture</h3>
+                                <p style={{ margin: '0px', color: '#a0aec0' }}>1,120 events</p>
+                            </div>
                         </div>
-                    </div>
-                    <p style={{color:'#a0aec0'}}>Exhibitions, craft fairs, shows</p>
+                        <p style={{ color: '#a0aec0' }}>Exhibitions, craft fairs, shows</p>
                     </div>
                 </div>
             </div>
