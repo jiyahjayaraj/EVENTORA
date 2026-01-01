@@ -11,6 +11,8 @@ function App() {
   return(
   <>
   <Navbar />
+
+  
   <Hero/>
   <Trending/>
   <Category/>
