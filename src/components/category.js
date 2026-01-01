@@ -1,16 +1,16 @@
-import card1 from './card1.png'
-import card2 from './card2.png'
-import card3 from './card3.png'
-import card4 from './card4.png'
-import card5 from './card5.png'
-import card6 from './card6.png'
+import card1 from '../images/card1.png'
+import card2 from '../images/card2.png'
+import card3 from '../images/card3.png'
+import card4 from '../images/card4.png'
+import card5 from '../images/card5.png'
+import card6 from '../images/card6.png'
 import './style.css'
-import icon1 from './ic1.png'
-import icon2 from './ic2.png'
-import icon3 from './ic3.png'
-import icon4 from './ic4.png'
-import icon5 from './ic5.png'
-import icon6 from './ic6.png'
+import icon1 from '../images/ic1.png'
+import icon2 from '../images/ic2.png'
+import icon3 from '../images/ic3.png'
+import icon4 from '../images/ic4.png'
+import icon5 from '../images/ic5.png'
+import icon6 from '../images/ic6.png'
 
 const Category = () => {
     return (
@@ -28,7 +28,7 @@ const Category = () => {
             <div style={{
                 display: 'flex', backgroundColor: 'black',
                 flexWrap: 'wrap', justifyContent: 'center', justifyContent: 'space-around',
-                padding: '5px',
+                paddingBottom:'40px'
             }}>
                 <div className='card'><img src={card1}></img>
                     <div className='overlay'>

@@ -1,7 +1,7 @@
-import icon1 from './i1.png'
-import icon2 from './i2.png'
-import icon3 from './i3.png'
-import icon4 from './i4.png'
+import icon1 from '../images/i1.png'
+import icon2 from '../images/i2.png'
+import icon3 from '../images/i3.png'
+import icon4 from '../images/i4.png'
 import './org.css'
 
 const Organizer = () => {

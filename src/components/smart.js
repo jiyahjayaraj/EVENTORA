@@ -1,13 +1,12 @@
-import icon1 from './icc1.png'
-import icon2 from './icc2.png'
-import icon3 from './icc3.png'
-import './smart.css'
+import icon1 from "../images/icc1.png";
+import icon2 from "../images/icc2.png";
+import icon3 from "../images/icc3.png";
+import card3 from '../images/main.png'
 
 
 const Smart = () => {
   const containerStyle = {
-    background: "linear-gradient(135deg, #d9f048ff 0%, #0a0d14 100%)",
-    // background: "linear-gradient(135deg, #0b0f1a 0%, #0a0d14 100%)",
+    background: "linear-gradient(135deg, #0b0f1a 0%, #0a0d14 100%)",
     color: "#ffffff",
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
   };
@@ -44,14 +43,9 @@ const Smart = () => {
   };
 
   const iconStyle = {
-    width: "36px",
-    height: "36px",
-    borderRadius: "10px",
-    background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: 700,
   };
 
   const buttonStyle = {
@@ -68,34 +62,32 @@ const Smart = () => {
     width: "fit-content",
   };
 
-  const imageCard = {
-    position: "relative",
-    width: "260px",
-    height: "360px",
-    borderRadius: "18px",
-    overflow: "hidden",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.45)",
-  };
-
-  const badgeStyle = {
-    position: "absolute",
-    bottom: "14px",
-    right: "14px",
-    background: "linear-gradient(135deg, #a855f7, #ec4899)",
-    padding: "6px 10px",
-    borderRadius: "999px",
-    fontSize: "12px",
-    fontWeight: 600,
-  };
+  const cards = [
+    {
+      title: "AI Workshop",
+      match: "98% Match",
+      image:  card3
+    },
+    {
+      title: "Startup Meetup",
+      match: "94% Match",
+      image:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200",
+    },
+    {
+      title: "Tech Expo",
+      match: "89% Match",
+      image:
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200",
+    },
+  ];
 
   return (
     <div
       style={{
         minHeight: "100vh",
         background: containerStyle.background,
-        padding: "100px 56px",
+        padding: "50px 56px",
         display: "flex",
       }}
     >
@@ -116,7 +108,9 @@ const Smart = () => {
           {/* FEATURES */}
           <div style={{ marginTop: "30px" }}>
             <div style={featureCard}>
-              <div ><img style={iconStyle} src={icon1}></img></div>
+              <div style={iconStyle}>
+                <img src={icon1} alt="" style={{  width:'30px',height:'30px' ,borderRadius:'10px' }} />
+              </div>
               <div>
                 <div style={{ fontWeight: 600 }}>Smart Learning</div>
                 <div style={{ fontSize: "13px", color: "#9aa4b2" }}>
@@ -126,7 +120,9 @@ const Smart = () => {
             </div>
 
             <div style={featureCard}>
-              <div style={iconStyle}><img style={iconStyle} src={icon2}></img></div>
+              <div style={iconStyle}>
+                <img src={icon2} alt="" style={{ width:'30px',height:'30px' ,borderRadius:'10px'}} />
+              </div>
               <div>
                 <div style={{ fontWeight: 600 }}>Personalized Picks</div>
                 <div style={{ fontSize: "13px", color: "#9aa4b2" }}>
@@ -136,7 +132,9 @@ const Smart = () => {
             </div>
 
             <div style={featureCard}>
-              <div style={iconStyle}><img style={iconStyle} src={icon3}></img></div>
+              <div style={iconStyle}>
+                <img src={icon3} alt="" style={{  width:'30px',height:'30px' ,borderRadius:'10px' }} />
+              </div>
               <div>
                 <div style={{ fontWeight: 600 }}>Community Insights</div>
                 <div style={{ fontSize: "13px", color: "#9aa4b2" }}>
@@ -146,41 +144,79 @@ const Smart = () => {
             </div>
           </div>
 
-          <button style={buttonStyle}>Get Personalized Recommendations</button>
+          <button style={buttonStyle}>
+            Get Personalized Recommendations
+          </button>
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT SIDE – STACKED CARDS */}
       <div
         style={{
           width: "50%",
+          position: "relative",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          gap: "30px",
         }}
       >
-        <div
-          style={{
-            ...imageCard,
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1518770660439-4636190af475)",
-            transform: "rotate(-4deg)",
-          }}
-        >
-          <div style={badgeStyle}>98% Match</div>
-        </div>
+        {cards.map((card, index) => (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              width: "320px",
+              height: "400px",
+              borderRadius: "22px",
+              backgroundImage: `url(${card.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              transform: `translateX(${index * 45}px) scale(${
+                1 - index * 0.06
+              }) rotate(${index === 0 ? "-5deg" : index === 1 ? "7deg" : "20deg"})`,
+              zIndex: 10 - index,
+              overflow: "hidden",
+            }}
+          >
+            {/* Overlay */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+              }}
+            />
 
-        <div
-          style={{
-            ...imageCard,
-            backgroundImage:
-              "url(https://images.unsplash.com/photo-1521737604893-d14cc237f11d)",
-            transform: "rotate(3deg)",
-          }}
-        >
-          <div style={badgeStyle}>94% Match</div>
-        </div>
+            {/* Content */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "18px",
+                left: "18px",
+                right: "18px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "#fff",
+              }}
+            >
+              <div style={{ fontWeight: 600, fontSize: "16px" }}>
+                {card.title}
+              </div>
+
+              <div
+                style={{
+                  background: "linear-gradient(135deg, #a855f7, #ec4899)",
+                  padding: "6px 12px",
+                  borderRadius: "999px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                }}
+              >
+                {card.match}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
