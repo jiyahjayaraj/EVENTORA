@@ -16,6 +16,8 @@ function App() {
   <Hero/>
   <Trending/>
   <Category/>
+
+  
     <Smart/>
     <Organizer/>
     <Footer/>
