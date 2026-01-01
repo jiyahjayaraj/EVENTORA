@@ -6,7 +6,7 @@ import './smart.css'
 
 const Smart = () => {
   const containerStyle = {
-    background: "linear-gradient(135deg, #0b0f1a 0%, #0a0d14 100%)",
+    background: "linear-gradient(135deg, #1a0b0fff 0%, #0a0d14 100%)",
     color: "#ffffff",
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
   };
