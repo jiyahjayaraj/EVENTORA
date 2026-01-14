@@ -5,7 +5,7 @@ const Footer = () => {
     background: "linear-gradient(180deg, #0b0f1a, #070a12)",
     color: "#ffffff",
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    paddingTop: "60px",
+    paddingTop: "0px",
   };
 
   const newsletter = {
