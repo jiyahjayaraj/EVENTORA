@@ -7,6 +7,19 @@
   background: linear-gradient(180deg, #0b0b12, #111118);
   color: #fff;
 }
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.hero-title {
+  font-weight: 700;
+}
+
+.hero-highlight {
+  font-weight: 800;
+  color: #ff7a18;
+}
+
 
 /* LEFT */
 .nav-left {
@@ -570,3 +583,4 @@
     width: 370px;
   }
 }
+

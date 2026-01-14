@@ -47,15 +47,17 @@ const Trending = () => {
               }}
             >
               <span className="category">{item.category}</span>
-              <span className="fav">♡</span>
+              {/* <span className="fav">♡</span> */}
               <span className="badge orange">Trending</span>
             </div>
 
             <div className="card-body">
               <h3>{item.title}</h3>
-              <div className="info">📅 Coming Soon</div>
-              <div className="info">📍 Online Event</div>
-              <div className="info">👥 {item.stock * 10}+ attending</div>
+              <div className="info">    <i className="fa-solid fa-calendar" style={{color:" #ff6a00"}}></i>
+ Coming Soon</div>
+              <div className="info">    <i className="fa-solid fa-location-dot" style={{color:" #ff6a00"}}></i>
+ Online Event</div>
+              <div className="info"><i class="fa-solid fa-user-group" style={{color:" #ff6a00"}}></i> {item.stock * 10}+ attending</div>
             </div>
 
             <div className="card-footer">

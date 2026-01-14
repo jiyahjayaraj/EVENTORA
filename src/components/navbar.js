@@ -19,7 +19,8 @@ const Navbar = () => {
 
       {/* Right actions */}
       <div className="nav-right">
-        <span className="search-icon">🔍</span>
+        <span className="search-icon">    <i className="fa-solid fa-magnifying-glass"></i>
+</span>
         <button className="signin-btn">Sign In</button>
         <button className="getstarted-btn">Get Started</button>
       </div>
