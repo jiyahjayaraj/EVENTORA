@@ -1,14 +1,16 @@
 import './footer.css'
+import logo from "../images/logo.png"
 
 const Footer = () => {
   const wrapper = {
-    background: "linear-gradient(180deg, #0b0f1a, #070a12)",
+    
     color: "#ffffff",
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
     paddingTop: "0px",
   };
 
   const newsletter = {
+    background: "linear-gradient(180deg, #0b0f1a, #070a12)",
     textAlign: "center",
     padding: "60px 20px",
     borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -53,12 +55,13 @@ const Footer = () => {
   };
 
   const footerGrid = {
+    background:"black",
     display: "grid",
     gridTemplateColumns: "1.2fr repeat(4, 1fr)",
     gap: "40px",
     maxWidth: "1200px",
-    margin: "60px auto",
-    padding: "0 40px",
+    margin: "0px auto",
+    padding: " 40px",
   };
 
   const columnTitle = {
@@ -102,6 +105,7 @@ const Footer = () => {
 
   const bottomBar = {
     borderTop: "1px solid rgba(255,255,255,0.06)",
+    background:"black",
     padding: "20px 40px",
     display: "flex",
     justifyContent: "space-between",
@@ -126,9 +130,10 @@ const Footer = () => {
       </div>
 
       {/* FOOTER LINKS */}
+      <div style={{background:"black"}}>
       <div style={footerGrid}>
         <div>
-          <div style={brand}>🎟 EVENTORA</div>
+          <div style={{heigh:"30px",width:"200px"}}><img src={logo} style={{height:"100%",width:"100%"}}></img></div>
           <div style={{ fontSize: "14px", color: "#9aa4b2", lineHeight: "1.6" }}>
             Discover and book amazing events, powered by AI recommendations.
           </div>
@@ -178,6 +183,7 @@ const Footer = () => {
         <div>© 2025 Eventora. All rights reserved.</div>
         <div>Made with passion for unforgettable experiences</div>
       </div>
+    </div>
     </div>
   );
 };

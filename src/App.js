@@ -1,29 +1,39 @@
-import Category from "./components/category";
-import Navbar from "./components/navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/navbar";
 import Hero from "./components/hero";
 import Trending from "./components/trending";
+import Category from "./components/category";
+import Smart from "./components/smart";
 import Organizer from "./components/organizer";
 import Footer from "./components/footer";
-import Smart from "./components/smart";
+import Detail from "./components/details";
 
 function App() {
-  return(
-  <>
-  <Navbar />
+  return (
+    <BrowserRouter>
+      <Navbar />
 
-  
-  <Hero/>
-  <Trending/>
-  <Category/>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Hero />
+              <Trending />
+              <Category />
+              <Smart />
+              <Organizer />
+            </>
+          }
+        />
 
-  
-    <Smart/>
-    <Organizer/>
-    <Footer/>
-  </> 
-  )
+        <Route path="/details/:id" element={<Detail />} />
+      </Routes>
+
+      <Footer />
+    </BrowserRouter>
+  );
 }
+
 export default App;
-
-

@@ -1,12 +1,12 @@
 import "./style.css";
+import logo from "../images/logo.png"
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       {/* Left logo */}
       <div className="nav-left">
-        <div className="logo-box">🎟</div>
-        <span className="logo-text">EVENTORA</span>
+        <img src={logo}></img>
       </div>
 
       {/* Center links */}

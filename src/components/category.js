@@ -14,7 +14,7 @@ import icon6 from '../images/ic6.png'
 
 const Category = () => {
     return (
-        <div>
+        <div style={{}}>
             <div class="browse">
                 <p class="eyebrow">BROWSE CATEGORIES</p>
                 <h1>Find What Inspires You</h1>
