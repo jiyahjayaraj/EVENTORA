@@ -8,7 +8,7 @@ import Smart from "./components/smart";
 import Organizer from "./components/organizer";
 import Footer from "./components/footer";
 import Detail from "./components/details";
-
+import PaymentPage from "./components/ticketPayment"
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +29,7 @@ function App() {
         />
 
         <Route path="/details/:id" element={<Detail />} />
+<Route path="/payment" element={<PaymentPage />} />
       </Routes>
 
       <Footer />
