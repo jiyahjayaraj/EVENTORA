@@ -63,7 +63,6 @@ const Trending = () => {
             </div>
 
             <div className="card-footer">
-              <span className="price">${item.price}</span>
               <Link to={`/details/${item._id}`}>
                 <button>Get Tickets</button>
               </Link>
