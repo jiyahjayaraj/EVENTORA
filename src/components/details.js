@@ -91,102 +91,128 @@ const Detail = () => {
     };
 
     return (
-        <div className="detail-container">
-            <div className="event-section">
-                <h1 className="event-title">{event.eventName}</h1>
+        <div className="detail-page">
 
-                <div className="event-meta">
-                    <p>
-                        <i className="fa-solid fa-calendar" style={{ color: "#ff7a18" }}></i>{" "}
-                        {new Date(event.eventDate).toDateString()}
-                    </p>
-
-                    <p>
-                        <i className="fa-solid fa-location-dot" style={{ color: "#ff7a18" }}></i>{" "}
-                        {event.eventLocation}
-                    </p>
-
-                    <p>
-                        <i className="fa-solid fa-users" style={{ color: "#ff7a18" }}></i>{" "}
-                        {(event.stock || 0) * 10}+ attending
-                    </p>
+            {/* ================= TOP EVENT SECTION ================= */}
+            <div className="event-header">
+                <div className="event-banner">
+                    <img
+                        src={`http://localhost:5000${event.bannerImage}`}
+                        alt="event"
+                    />
+                    <span className="badge">Trending</span>
                 </div>
 
-                <img
-                    src={`http://localhost:5000${event.bannerImage}`}
-                    alt="event"
-                    className="event-image"
-                />
+                <div className="event-info">
+                    <h1>{event.eventName}</h1>
+
+                    <div className="meta">
+                        <p>
+                            <i className="fa-solid fa-calendar"></i>
+                            {new Date(event.eventDate).toDateString()}
+                        </p>
+                        <p>
+                            <i className="fa-solid fa-location-dot"></i>
+                            {event.eventLocation}
+                        </p>
+                        <p>
+                            <i className="fa-solid fa-users"></i>
+                            {(event.stock || 0) * 10}+ Attending
+                        </p>
+                    </div>
+
+                    <p className="description">
+                        {event.description}
+                    </p>
+                </div>
             </div>
 
-            <div className="booking-card">
-                <h2>Get Your Tickets</h2>
+            {/* ================= MAIN CONTENT ================= */}
+{/* ================= MAIN CONTENT ================= */}
+<div className="booking-layout">
 
-                {ticketTypes.length > 0 && (
-                    <div className="ticket-type-section">
-                        <label>Select Ticket Type</label>
+    {/* ========= 1️⃣ TICKET SELECTION CARD ========= */}
+    <div className="card booking-card">
+        <h2>Get Your Tickets</h2>
 
-                        <div className="ticket-options">
-                            {ticketTypes.map((type) => (
-                                <div
-                                    key={type._id}
-                                    className={`ticket-card ${
-                                        selectedTicket?._id === type._id ? "active" : ""
-                                    }`}
-                                    onClick={() => setSelectedTicket(type)}
-                                >
-                                    <span>{type.name}</span>
-                                    <span>₹{type.price}</span>
-                                </div>
-                            ))}
+        {ticketTypes.length > 0 && (
+            <div className="ticket-type-section">
+                <label>Select Ticket Type</label>
+
+                <div className="ticket-options">
+                    {ticketTypes.map((type) => (
+                        <div
+                            key={type._id}
+                            className={`ticket-card ${
+                                selectedTicket?._id === type._id ? "active" : ""
+                            }`}
+                            onClick={() => setSelectedTicket(type)}
+                        >
+                            <span>{type.name}</span>
+                            <span>₹{type.price}</span>
                         </div>
-                    </div>
-                )}
-
-                <div className="ticket-selector">
-                    <label>Select Number of Tickets</label>
-
-                    <div className="counter">
-                        <button onClick={decrease}>−</button>
-                        <span>{tickets}</span>
-                        <button onClick={increase}>+</button>
-                    </div>
-
-                    <div className="total">
-                        Total: <span>₹{total}</span>
-                    </div>
+                    ))}
                 </div>
-
-                {/* <div className="payment-section">
-                    <h3>Enter Payment Information</h3>
-                    <input type="text" placeholder="Cardholder Name" />
-                    <input type="text" placeholder="Card Number" />
-                    <div className="row">
-                        <input type="text" placeholder="Expiry Date" />
-                        <input type="text" placeholder="CVV" />
-                    </div>
-                </div> */}
-
-                <div className="summary">
-                    <h3>Order Summary</h3>
-                    <p># of Tickets: {tickets}</p>
-                    <p>Ticket Type: {selectedTicket?.name}</p>
-                    <p>Price per Ticket: ₹{price}</p>
-                    <p className="summary-total">Total Price: ₹{total}</p>
-                </div>
-
-                <button
-                    className="pay-btn"
-                    onClick={handlePayment}
-                    disabled={loading}
-                >
-                    {loading ? "Processing..." : "Proceed to Payment"}
-                </button>
-
-                <p className="secure-text">
-                    <i className="fa-solid fa-lock"></i> Your information is safe and secure
-                </p>
             </div>
+        )}
+
+        <div className="ticket-selector">
+            <label>Select Number of Tickets</label>
+
+            <div className="counter">
+                <button onClick={decrease}>−</button>
+                <span>{tickets}</span>
+                <button onClick={increase}>+</button>
+            </div>
+
+            <div className="total">
+                Total: <span>₹{total}</span>
+            </div>
+        </div>
+    </div>
+
+
+    {/* ========= 2️⃣ ORDER SUMMARY CARD ========= */}
+    <div className="card summary-card">
+        <div className="summary">
+            <h3>Order Summary</h3>
+            <p># of Tickets: {tickets}</p>
+            <p>Ticket Type: {selectedTicket?.name}</p>
+            <p>Price per Ticket: ₹{price}</p>
+            <p className="summary-total">Total Price: ₹{total}</p>
+        </div>
+
+        <button
+            className="pay-btn"
+            onClick={handlePayment}
+            disabled={loading}
+        >
+            {loading ? "Processing..." : "Proceed to Payment"}
+        </button>
+
+        <p className="secure-text">
+            <i className="fa-solid fa-lock"></i> Your information is safe and secure
+        </p>
+    </div>
+
+
+    {/* ========= 3️⃣ FEEDBACK CARD ========= */}
+    <div className="card feedback-card">
+        <h3>Feedback & Rating</h3>
+
+        <div className="rating">
+            <h2>4.7 ★★★★★</h2>
+            <p>75k+ Attendees</p>
+        </div>
+
+        <textarea placeholder="Write your review..." />
+
+        <button className="secondary-btn">
+            Submit Review
+        </button>
+    </div>
+
+</div>
         </div>
     );
 };
