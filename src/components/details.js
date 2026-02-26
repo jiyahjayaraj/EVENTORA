@@ -13,6 +13,10 @@ const Detail = () => {
     const [tickets, setTickets] = useState(1);
     const [loading, setLoading] = useState(false); // ✅ added
 
+    const [comment, setComment] = useState("");
+    const [rating, setRating] = useState(5);
+    const [submitting, setSubmitting] = useState(false);
+
     useEffect(() => {
         fetch(`http://localhost:5000/api/events/${id}`)
             .then((res) => res.json())
@@ -43,6 +47,39 @@ const Detail = () => {
     }, [id]);
 
     if (!event) return <p>Loading...</p>;
+    const handleSubmitFeedback = async () => {
+        if (!comment.trim()) {
+            alert("Please enter a comment");
+            return;
+        }
+
+        try {
+            setSubmitting(true);
+
+            await axios.post(
+                `http://localhost:5000/api/events/${id}/feedback`,
+                {
+                    comment,
+                    rating
+                },
+                {
+                    withCredentials: true // if using cookies
+                    // OR use Authorization header if using token
+                }
+            );
+
+            alert("Feedback submitted successfully ✅");
+
+            setComment("");
+            setRating(5);
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to submit feedback ❌");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const price = selectedTicket?.price || 0;
     const total = tickets * price;
@@ -100,7 +137,7 @@ const Detail = () => {
                         src={`http://localhost:5000${event.bannerImage}`}
                         alt="event"
                     />
-                    <span className="badge">Trending</span>
+
                 </div>
 
                 <div className="event-info">
@@ -108,16 +145,16 @@ const Detail = () => {
 
                     <div className="meta">
                         <p>
-                            <i className="fa-solid fa-calendar"></i>
+                            <i className="fa-solid fa-calendar" style={{ color: " #ff6a00" }}></i>
                             {new Date(event.eventDate).toDateString()}
                         </p>
                         <p>
-                            <i className="fa-solid fa-location-dot"></i>
+                            <i className="fa-solid fa-location-dot" style={{ color: " #ff6a00" }}></i>
                             {event.eventLocation}
                         </p>
                         <p>
-                            <i className="fa-solid fa-users"></i>
-                            {(event.stock || 0) * 10}+ Attending
+                            <i className="fa-solid fa-ticket" style={{ color: "#ff6a00" }}></i>
+                            Starting from ₹{ticketTypes[0]?.price}
                         </p>
                     </div>
 
@@ -128,91 +165,107 @@ const Detail = () => {
             </div>
 
             {/* ================= MAIN CONTENT ================= */}
-{/* ================= MAIN CONTENT ================= */}
-<div className="booking-layout">
+            {/* ================= MAIN CONTENT ================= */}
+            <div className="booking-layout">
 
-    {/* ========= 1️⃣ TICKET SELECTION CARD ========= */}
-    <div className="card booking-card">
-        <h2>Get Your Tickets</h2>
+                {/* ========= 1️⃣ TICKET SELECTION CARD ========= */}
+                <div className="card booking-card">
+                    <h2>Get Your Tickets</h2>
 
-        {ticketTypes.length > 0 && (
-            <div className="ticket-type-section">
-                <label>Select Ticket Type</label>
+                    {ticketTypes.length > 0 && (
+                        <div className="ticket-type-section">
+                            <label>Select Ticket Type</label>
 
-                <div className="ticket-options">
-                    {ticketTypes.map((type) => (
-                        <div
-                            key={type._id}
-                            className={`ticket-card ${
-                                selectedTicket?._id === type._id ? "active" : ""
-                            }`}
-                            onClick={() => setSelectedTicket(type)}
-                        >
-                            <span>{type.name}</span>
-                            <span>₹{type.price}</span>
+                            <div className="ticket-options">
+                                {ticketTypes.map((type) => (
+                                    <div
+                                        key={type._id}
+                                        className={`ticket-card ${selectedTicket?._id === type._id ? "active" : ""
+                                            }`}
+                                        onClick={() => setSelectedTicket(type)}
+                                    >
+                                        <span>{type.name}</span>
+                                        <span>₹{type.price}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    ))}
+                    )}
+
+                    <div className="ticket-selector">
+                        <label>Select Number of Tickets</label>
+
+                        <div className="counter">
+                            <button onClick={decrease}>−</button>
+                            <span>{tickets}</span>
+                            <button onClick={increase}>+</button>
+                        </div>
+
+                        <div className="total">
+                            Total: <span>₹{total}</span>
+                        </div>
+                    </div>
                 </div>
+
+
+                {/* ========= 2️⃣ ORDER SUMMARY CARD ========= */}
+                <div className="card summary-card">
+                    <div className="summary">
+                        <h3>Order Summary</h3>
+                        <p># of Tickets: {tickets}</p>
+                        <p>Ticket Type: {selectedTicket?.name}</p>
+                        <p>Price per Ticket: ₹{price}</p>
+                        <p className="summary-total">Total Price: ₹{total}</p>
+                    </div>
+
+                    <button
+                        className="pay-btn"
+                        onClick={handlePayment}
+                        disabled={loading}
+                    >
+                        {loading ? "Processing..." : "Proceed to Payment"}
+                    </button>
+
+                    <p className="secure-text">
+                        <i className="fa-solid fa-lock"></i> Your information is safe and secure
+                    </p>
+                </div>
+
+
+                {/* ========= 3️⃣ FEEDBACK CARD ========= */}
+                <div className="card feedback-card">
+                    <h3>Feedback & Rating</h3>
+
+                    <div className="rating-display">
+
+                        <div className="stars">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <i
+                                    key={star}
+                                    className={`fa-star ${star <= rating ? "fa-solid active" : "fa-regular"
+                                        }`}
+                                    onClick={() => setRating(star)}
+                                ></i>
+                            ))}
+                        </div>
+                    </div>
+
+                    <textarea
+                        placeholder="Share your experience about this event..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                    />
+
+                    <button
+                        className="secondary-btn"
+                        onClick={handleSubmitFeedback}
+                        disabled={submitting}
+                    >
+                        {submitting ? "Submitting..." : "Submit Review"}
+                    </button>
+                </div>
+
             </div>
-        )}
-
-        <div className="ticket-selector">
-            <label>Select Number of Tickets</label>
-
-            <div className="counter">
-                <button onClick={decrease}>−</button>
-                <span>{tickets}</span>
-                <button onClick={increase}>+</button>
-            </div>
-
-            <div className="total">
-                Total: <span>₹{total}</span>
-            </div>
-        </div>
-    </div>
-
-
-    {/* ========= 2️⃣ ORDER SUMMARY CARD ========= */}
-    <div className="card summary-card">
-        <div className="summary">
-            <h3>Order Summary</h3>
-            <p># of Tickets: {tickets}</p>
-            <p>Ticket Type: {selectedTicket?.name}</p>
-            <p>Price per Ticket: ₹{price}</p>
-            <p className="summary-total">Total Price: ₹{total}</p>
-        </div>
-
-        <button
-            className="pay-btn"
-            onClick={handlePayment}
-            disabled={loading}
-        >
-            {loading ? "Processing..." : "Proceed to Payment"}
-        </button>
-
-        <p className="secure-text">
-            <i className="fa-solid fa-lock"></i> Your information is safe and secure
-        </p>
-    </div>
-
-
-    {/* ========= 3️⃣ FEEDBACK CARD ========= */}
-    <div className="card feedback-card">
-        <h3>Feedback & Rating</h3>
-
-        <div className="rating">
-            <h2>4.7 ★★★★★</h2>
-            <p>75k+ Attendees</p>
-        </div>
-
-        <textarea placeholder="Write your review..." />
-
-        <button className="secondary-btn">
-            Submit Review
-        </button>
-    </div>
-
-</div>
         </div>
     );
 };
