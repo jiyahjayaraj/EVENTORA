@@ -157,15 +157,7 @@ const Detail = () => {
                     </div>
                 </div>
 
-                {/* <div className="payment-section">
-                    <h3>Enter Payment Information</h3>
-                    <input type="text" placeholder="Cardholder Name" />
-                    <input type="text" placeholder="Card Number" />
-                    <div className="row">
-                        <input type="text" placeholder="Expiry Date" />
-                        <input type="text" placeholder="CVV" />
-                    </div>
-                </div> */}
+                {}
 
                 <div className="summary">
                     <h3>Order Summary</h3>

@@ -50,7 +50,7 @@ const PaymentPage = () => {
 
         <h3>More Options</h3>
         <button className="pay-option">Net Banking</button>
-        <button className="pay-option">Cash on Delivery</button>
+        {/* <button className="pay-option">Cash on Delivery</button> */}
       </div>
 
       <button className="confirm-btn" onClick={handleConfirmPayment}>
