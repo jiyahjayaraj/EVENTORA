@@ -30,7 +30,7 @@ const Category = () => {
                 flexWrap: 'wrap', justifyContent: 'center', justifyContent: 'space-around',
                 paddingBottom:'40px'
             }}>
-                <div className='card'><img src={card1}></img>
+                <div className='cards'><img src={card1}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{
@@ -44,7 +44,7 @@ const Category = () => {
                         <p style={{ color: '#a0aec0' }}>Concerts, DJ nights, comedy shows</p>
                     </div>
                 </div>
-                <div className='card'><img src={card2}></img>
+                <div className='cards'><img src={card2}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{
@@ -58,7 +58,7 @@ const Category = () => {
                         <p style={{ color: '#a0aec0' }}>Workshps, seminars, training</p>
                     </div>
                 </div>
-                <div className='card'><img src={card3}></img>
+                <div className='cards'><img src={card3}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{
@@ -72,7 +72,7 @@ const Category = () => {
                         <p style={{ color: '#a0aec0' }}>Hackathons, AI events, meetups</p>
                     </div>
                 </div>
-                <div className='card'><img src={card4}></img>
+                <div className='cards'><img src={card4}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{
@@ -86,7 +86,7 @@ const Category = () => {
                         <p style={{ color: '#a0aec0' }}>Networking, summits, launches</p>
                     </div>
                 </div>
-                <div className='card'><img src={card5}></img>
+                <div className='cards'><img src={card5}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{
@@ -100,7 +100,7 @@ const Category = () => {
                         <p style={{ color: '#a0aec0' }}>Marathons, tournaments, cycling</p>
                     </div>
                 </div>
-                <div className='card'><img src={card6}></img>
+                <div className='cards'><img src={card6}></img>
                     <div className='overlay'>
                         <div style={{ display: 'flex' }}>
                             <img style={{

@@ -47,10 +47,7 @@ const Trending = () => {
               style={{
                 backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
               }}
-            >
-              <span className="category">{item.category}</span>
-              {/* <span className="fav">♡</span> */}
-              <span className="badge orange">Trending</span>
+            >      
             </div>
 
             <div className="card-body">
@@ -59,7 +56,8 @@ const Trending = () => {
                 {item.eventDate}</div>
               <div className="info">    <i className="fa-solid fa-location-dot" style={{ color: " #ff6a00" }}></i>
                 {item.eventLocation}</div>
-              <div className="info"><i className="fa-solid fa-user-group" style={{ color: " #ff6a00" }}></i> {item.stock * 10}+ attending</div>
+              {/* <div className="info"><i className="fa-solid fa-ticket" style={{ color: "#ff6a00" }}></i>
+              Starting from ₹{ticketTypes[0]?.price}</div> */}
             </div>
 
             <div className="card-footer">
