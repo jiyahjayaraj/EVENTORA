@@ -6,8 +6,8 @@ import axios from "axios";
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [isLogin, setIsLogin] = useState(true); // ✅ ADDED
+  const [isLogin, setIsLogin] = useState(true);
+  const [showProfile, setShowProfile] = useState(false); // ✅ added
 
   const [formData, setFormData] = useState({
     name: "",
@@ -15,17 +15,24 @@ const Navbar = () => {
     password: ""
   });
 
-  // Auto login check
+  // ✅ Auto login check
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/profile", {
-        withCredentials: true
-      })
-      .then((res) => setUser(res.data.user)) // ⚠️ Make sure backend sends { user }
-      .catch(() => setUser(null));
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/profile",
+          { withCredentials: true }
+        );
+        setUser(res.data.user);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
-  // ✅ LOGIN FUNCTION
+  // ✅ LOGIN
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -44,7 +51,7 @@ const Navbar = () => {
     }
   };
 
-  // ✅ REGISTER FUNCTION (your existing one)
+  // ✅ REGISTER
   const handleRegister = async () => {
     try {
       const res = await axios.post(
@@ -57,6 +64,22 @@ const Navbar = () => {
       setShowModal(false);
     } catch (error) {
       alert("User already exists");
+    }
+  };
+
+  // ✅ LOGOUT
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/users/logout",
+        {},
+        { withCredentials: true }
+      );
+
+      setUser(null);
+      setShowProfile(false); // ✅ close profile box
+    } catch (error) {
+      console.error("Logout failed", error);
     }
   };
 
@@ -75,22 +98,34 @@ const Navbar = () => {
         </ul>
 
         <div className="nav-right">
-          {/* <div className="search-box">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search events..." />
-          </div> */}
-
           {user ? (
-            <div className="user-section">
+            <div className="user-logged">
               <div
-                className="avatar"
-                onClick={() => setShowDropdown(!showDropdown)}
+                className="avatar-circle"
+                onClick={() => setShowProfile(!showProfile)}
+                style={{ cursor: "pointer" }}
               >
                 {user.name?.charAt(0).toUpperCase()}
               </div>
 
-              {showDropdown && (
-                <div className="dropdown-box">
+              <span
+                className="user-name"
+                onClick={() => setShowProfile(!showProfile)}
+                style={{ cursor: "pointer" }}
+              >
+                {user.name}
+              </span>
+
+              <button
+                className="logout-btn"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+
+              {/* ✅ Profile Box */}
+              {showProfile && (
+                <div className="profile-box">
                   <p><strong>Name:</strong> {user.name}</p>
                   <p><strong>Email:</strong> {user.email}</p>
                 </div>
@@ -104,6 +139,7 @@ const Navbar = () => {
               >
                 Sign In
               </button>
+
               <button className="getstarted-btn">
                 Get Started
               </button>
@@ -112,13 +148,12 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Modal */}
+      {/* ✅ Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <h2>{isLogin ? "Sign In" : "Sign Up"}</h2>
 
-            {/* Name only for signup */}
             {!isLogin && (
               <input
                 type="text"
@@ -149,11 +184,10 @@ const Navbar = () => {
               {isLogin ? "Login" : "Register"}
             </button>
 
-            {/* ✅ Toggle text (no design change) */}
             <p
-  className="modal-toggle-text"
-  onClick={() => setIsLogin(!isLogin)}
->
+              className="modal-toggle-text"
+              onClick={() => setIsLogin(!isLogin)}
+            >
               {isLogin
                 ? "New user? Click to Sign Up"
                 : "Already have account? Click to Login"}
