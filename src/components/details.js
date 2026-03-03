@@ -1,273 +1,130 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import "./details.css";
+import "./style.css";
+import logo from "../images/logo.png";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const Detail = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+const Navbar = () => {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState(null);
 
-    const [event, setEvent] = useState(null);
-    const [ticketTypes, setTicketTypes] = useState([]);
-    const [selectedTicket, setSelectedTicket] = useState(null);
-    const [tickets, setTickets] = useState(1);
-    const [loading, setLoading] = useState(false); // ✅ added
+  const [authForm, setAuthForm] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
 
-    const [comment, setComment] = useState("");
-    const [rating, setRating] = useState(5);
-    const [submitting, setSubmitting] = useState(false);
+  // 🔥 Check login when page loads
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/profile", {
+      withCredentials: true
+    })
+    .then(res => setUser(res.data))
+    .catch(() => setUser(null));
+  }, []);
 
-    useEffect(() => {
-        fetch(`http://localhost:5000/api/events/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setEvent(data);
-            })
-            .catch(console.error);
-    }, [id]);
+  // 🔥 Register same like Detail page
+  const handleRegister = async () => {
+    if (!authForm.name || !authForm.email || !authForm.password) {
+      alert("Please fill all fields");
+      return;
+    }
 
-    useEffect(() => {
-        const fetchTicketTypes = async () => {
-            try {
-                const res = await axios.get(
-                    `http://localhost:5000/api/tickets/event/${id}`
-                );
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/users/register",
+        authForm,
+        { withCredentials: true }
+      );
 
-                setTicketTypes(res.data);
+      setUser(res.data.user);   // 🔥 set logged in user
+      setShowAuthModal(false);  // close modal
+      alert("Registered & Logged in ✅");
 
-                if (res.data.length > 0) {
-                    setSelectedTicket(res.data[0]);
-                }
-            } catch (err) {
-                console.error("Error fetching ticket types", err);
-            }
-        };
+    } catch (error) {
+      alert(error.response?.data?.message || "Registration failed ❌");
+    }
+  };
 
-        fetchTicketTypes();
-    }, [id]);
-
-    if (!event) return <p>Loading...</p>;
-    const handleSubmitFeedback = async () => {
-        if (!comment.trim()) {
-            alert("Please enter a comment");
-            return;
-        }
-
-        try {
-            setSubmitting(true);
-
-            await axios.post(
-                `http://localhost:5000/api/events/${id}/feedback`,
-                {
-                    comment,
-                    rating
-                },
-                {
-                    withCredentials: true // if using cookies
-                    // OR use Authorization header if using token
-                }
-            );
-
-            alert("Feedback submitted successfully ✅");
-
-            setComment("");
-            setRating(5);
-
-        } catch (error) {
-            console.error(error);
-            alert("Failed to submit feedback ❌");
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const price = selectedTicket?.price || 0;
-    const total = tickets * price;
-
-    const handlePayment = async () => {
-
-        if (loading) return; // ✅ prevent double click
-
-        try {
-            setLoading(true);
-
-            const res = await axios.post(
-                "http://localhost:5000/api/order",
-                {
-                    eventId: event._id,
-                    quantity: tickets,
-                    totalAmount: total
-                },
-                {
-                    withCredentials: true
-                }
-            );
-
-            navigate("/payment", {
-                state: {
-                    order: res.data
-                }
-            });
-
-        } catch (error) {
-            console.error(error);
-            alert("Order failed");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const increase = () => {
-        setTickets((prev) => prev + 1);
-    };
-
-    const decrease = () => {
-        if (tickets > 1) {
-            setTickets((prev) => prev - 1);
-        }
-    };
-
-    return (
-        <div className="detail-page">
-
-            {/* ================= TOP EVENT SECTION ================= */}
-            <div className="event-header">
-                <div className="event-banner">
-                    <img
-                        src={`http://localhost:5000${event.bannerImage}`}
-                        alt="event"
-                    />
-
-                </div>
-
-                <div className="event-info">
-                    <h1>{event.eventName}</h1>
-
-                    <div className="meta">
-                        <p>
-                            <i className="fa-solid fa-calendar" style={{ color: " #ff6a00" }}></i>
-                            {new Date(event.eventDate).toDateString()}
-                        </p>
-                        <p>
-                            <i className="fa-solid fa-location-dot" style={{ color: " #ff6a00" }}></i>
-                            {event.eventLocation}
-                        </p>
-                        <p>
-                            <i className="fa-solid fa-ticket" style={{ color: "#ff6a00" }}></i>
-                            Starting from ₹{ticketTypes[0]?.price}
-                        </p>
-                    </div>
-
-                    <p className="description">
-                        {event.description}
-                    </p>
-                </div>
-            </div>
-
-            {/* ================= MAIN CONTENT ================= */}
-            {/* ================= MAIN CONTENT ================= */}
-            <div className="booking-layout">
-
-                {/* ========= 1️⃣ TICKET SELECTION CARD ========= */}
-                <div className="card booking-card">
-                    <h2>Get Your Tickets</h2>
-
-                    {ticketTypes.length > 0 && (
-                        <div className="ticket-type-section">
-                            <label>Select Ticket Type</label>
-
-                            <div className="ticket-options">
-                                {ticketTypes.map((type) => (
-                                    <div
-                                        key={type._id}
-                                        className={`ticket-card ${selectedTicket?._id === type._id ? "active" : ""
-                                            }`}
-                                        onClick={() => setSelectedTicket(type)}
-                                    >
-                                        <span>{type.name}</span>
-                                        <span>₹{type.price}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="ticket-selector">
-                        <label>Select Number of Tickets</label>
-
-                        <div className="counter">
-                            <button onClick={decrease}>−</button>
-                            <span>{tickets}</span>
-                            <button onClick={increase}>+</button>
-                        </div>
-
-                        <div className="total">
-                            Total: <span>₹{total}</span>
-                        </div>
-                    </div>
-                </div>
-
-
-                {/* ========= 2️⃣ ORDER SUMMARY CARD ========= */}
-                <div className="card summary-card">
-                    <div className="summary">
-                        <h3>Order Summary</h3>
-                        <p># of Tickets: {tickets}</p>
-                        <p>Ticket Type: {selectedTicket?.name}</p>
-                        <p>Price per Ticket: ₹{price}</p>
-                        <p className="summary-total">Total Price: ₹{total}</p>
-                    </div>
-
-                    <button
-                        className="pay-btn"
-                        onClick={handlePayment}
-                        disabled={loading}
-                    >
-                        {loading ? "Processing..." : "Proceed to Payment"}
-                    </button>
-
-                    <p className="secure-text">
-                        <i className="fa-solid fa-lock"></i> Your information is safe and secure
-                    </p>
-                </div>
-
-
-                {/* ========= 3️⃣ FEEDBACK CARD ========= */}
-                <div className="card feedback-card">
-                    <h3>Feedback & Rating</h3>
-
-                    <div className="rating-display">
-
-                        <div className="stars">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <i
-                                    key={star}
-                                    className={`fa-star ${star <= rating ? "fa-solid active" : "fa-regular"
-                                        }`}
-                                    onClick={() => setRating(star)}
-                                ></i>
-                            ))}
-                        </div>
-                    </div>
-
-                    <textarea
-                        placeholder="Share your experience about this event..."
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                    />
-
-                    <button
-                        className="secondary-btn"
-                        onClick={handleSubmitFeedback}
-                        disabled={submitting}
-                    >
-                        {submitting ? "Submitting..." : "Submit Review"}
-                    </button>
-                </div>
-
-            </div>
+  return (
+    <>
+      <nav className="navbar">
+        <div className="nav-left">
+          <img src={logo} alt="logo" />
         </div>
-    );
+
+        <ul className="nav-center">
+          <li>Events</li>
+          <li>Categories</li>
+          <li>For Organizers</li>
+          <li>About</li>
+        </ul>
+
+        <div className="nav-right">
+          {user ? (
+            <span className="username">
+              Hello, {user.name}
+            </span>
+          ) : (
+            <>
+              <button
+                className="signin-btn"
+                onClick={() => setShowAuthModal(true)}
+              >
+                Sign In
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+
+      {/* 🔥 AUTH MODAL */}
+      {showAuthModal && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <h2>Create Account</h2>
+
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={authForm.name}
+              onChange={(e) =>
+                setAuthForm({ ...authForm, name: e.target.value })
+              }
+            />
+
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={authForm.email}
+              onChange={(e) =>
+                setAuthForm({ ...authForm, email: e.target.value })
+              }
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={authForm.password}
+              onChange={(e) =>
+                setAuthForm({ ...authForm, password: e.target.value })
+              }
+            />
+
+            <button className="primary-btn" onClick={handleRegister}>
+              Register
+            </button>
+
+            <button
+              className="secondary-btn"
+              onClick={() => setShowAuthModal(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
-export default Detail;
+export default Navbar;
