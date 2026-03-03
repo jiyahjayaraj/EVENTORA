@@ -75,10 +75,10 @@ const Navbar = () => {
         </ul>
 
         <div className="nav-right">
-          <div className="search-box">
+          {/* <div className="search-box">
             <i className="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Search events..." />
-          </div>
+          </div> */}
 
           {user ? (
             <div className="user-section">
