@@ -1,46 +1,54 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./singlecat.css";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+} from "@mui/material";
+
 import card4 from "../images/card4.png"; // business hero image
 
 const Business = () => {
   const [events, setEvents] = useState([]);
 
-  /* FETCH EVENTS */
   useEffect(() => {
     fetch("http://localhost:5000/api/events")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.events); // debug
-
         const businessEvents = data.events.filter(
           (event) =>
             event.eventType?.name?.toLowerCase() === "business"
         );
-
         setEvents(businessEvents);
       })
       .catch(console.error);
   }, []);
 
   return (
-    <section className="trending">
-      {/* HERO */}
-      <div
-        className="hero"
-        style={{
+    <Box sx={{ bgcolor: "#0c0c11", color: "#fff" }}>
+      {/* ================= HERO ================= */}
+      <Box
+        sx={{
           position: "relative",
-          height: "320px",
+          height: "100vh",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          flexDirection: "column",
+          alignItems: "center",      // horizontal center
+          justifyContent: "flex-start",
           textAlign: "center",
+          pt: 10,
           overflow: "hidden",
         }}
       >
-        {/* BLURRED BACKGROUND */}
-        <div
-          style={{
+        {/* BG */}
+        <Box
+          sx={{
             position: "absolute",
             inset: 0,
             backgroundImage: `url(${card4})`,
@@ -48,77 +56,133 @@ const Business = () => {
             backgroundPosition: "center",
             filter: "blur(7px)",
             transform: "scale(1.1)",
+            zIndex: 0,
           }}
         />
 
-        {/* CONTENT */}
-        <div style={{ position: "relative", zIndex: 1, color: "white" }}>
-          <h1
-            style={{
-              color: "#ff7a18",
-              fontSize: "48px",
-            }}
+        {/* Overlay */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            bgcolor: "rgba(0,0,0,0.55)",
+            zIndex: 1,
+          }}
+        />
+
+        {/* Content */}
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Typography
+            variant="h2"
+            sx={{ color: "#ff7a18", fontWeight: "bold" }}
           >
             Business Events
-          </h1>
-
-          <p style={{ fontSize: "20px" }}>
+          </Typography>
+          <Typography variant="h6">
             Conferences, Networking & Startup Meetups
-          </p>
-        </div>
-      </div>
+          </Typography>
+        </Box>
+      </Box>
 
-      {/* EVENTS */}
-      <div className="trending-content">
-        <div className="trending-cards">
+      {/* ================= EVENTS ================= */}
+      <Box
+        sx={{
+          position: "relative",
+          p: { xs: 2, md: 4 },
+          mt: "-500px",
+          zIndex: 3,
+          maxWidth: "1400px",
+          mx: "auto",
+        }}
+      >
+        <Grid container spacing={3} justifyContent="center">
           {events.length === 0 && (
-            <h2 style={{ color: "white" }}>
-              No Business Events Found
-            </h2>
+            <Grid item xs={12}>
+              <Typography align="center">
+                No Business Events Found
+              </Typography>
+            </Grid>
           )}
 
           {events.map((item) => (
-            <div className="event-card" key={item._id}>
-              {/* IMAGE */}
-              <div
-                className="card-img"
-                style={{
-                  backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
+            <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
+              <Card
+                sx={{
+                  height: "100%",
+                  bgcolor: "#14141c",
+                  color: "#fff",
+                  borderRadius: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "0.25s",
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                    boxShadow: 6,
+                  },
                 }}
-              />
+              >
+                {/* Image */}
+                <Box
+                  sx={{
+                    height: 200,
+                    backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
 
-              {/* BODY */}
-              <div className="card-body">
-                <h3>{item.eventName}</h3>
+                {/* Body */}
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {item.eventName}
+                  </Typography>
 
-                <div className="info">
-                  <i
-                    className="fa-solid fa-calendar"
-                    style={{ color: "#ff6a00" }}
-                  />{" "}
-                  {item.eventDate}
-                </div>
+                  <Typography
+                    variant="body2"
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                  >
+                    <CalendarMonthIcon
+                      fontSize="small"
+                      sx={{ color: "#ff6a00" }}
+                    />
+                    {item.eventDate}
+                  </Typography>
 
-                <div className="info">
-                  <i
-                    className="fa-solid fa-location-dot"
-                    style={{ color: "#ff6a00" }}
-                  />{" "}
-                  {item.eventLocation}
-                </div>
-              </div>
+                  <Typography
+                    variant="body2"
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                  >
+                    <LocationOnIcon
+                      fontSize="small"
+                      sx={{ color: "#ff6a00" }}
+                    />
+                    {item.eventLocation}
+                  </Typography>
+                </CardContent>
 
-              {/* FOOTER */}
-              <div className="card-footer">
-                <Link to={`/details/${item._id}`}>
-                  <button>View Details</button>
-                </Link>
-              </div>
-            </div>
+                {/* Footer */}
+                <CardActions sx={{ mt: "auto", p: 2 }}>
+                  <Button
+                    component={Link}
+                    to={`/details/${item._id}`}
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      background:
+                        "linear-gradient(90deg, #ff7a18, #ff9f1c)",
+                      fontWeight: "bold",
+                      borderRadius: "50px",
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Box>
+    </Box>
   );
 };
 

@@ -1,145 +1,176 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./singlecat.css"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+} from "@mui/material";
+
 import card1 from "../images/card1.png";
 
 const Entertainment = () => {
-
   const [events, setEvents] = useState([]);
 
-  /* FETCH EVENTS */
-useEffect(() => {
-
- fetch("http://localhost:5000/api/events")
-  .then(res => res.json())
-  .then(data => {
-
-   console.log(data.events); // debug
-
-   const entertainmentEvents = data.events.filter(
-    (event) =>
-     event.eventType?.name?.toLowerCase() === "entertainment"
-   );
-
-   setEvents(entertainmentEvents);
-
-  })
-  .catch(console.error);
-
-}, []);
+  useEffect(() => {
+    fetch("http://localhost:5000/api/events")
+      .then((res) => res.json())
+      .then((data) => {
+        const entertainmentEvents = data.events.filter(
+          (event) =>
+            event.eventType?.name?.toLowerCase() === "entertainment"
+        );
+        setEvents(entertainmentEvents);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
+    <Box sx={{ bgcolor: "#0c0c11", color: "#fff" }}>
 
-    <section className="trending">
+      {/* ================= HERO ================= */}
+      <Box
+        sx={{
+          position: "relative",
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",     // 🔑 important
+          alignItems: "center",        // ✅ horizontal center
+          justifyContent: "flex-start",// ✅ top vertically
+          textAlign: "center",
+          pt: 10,                      // space from top
+          overflow: "hidden",
+        }}
+      >
+        {/* BG */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${card1})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "blur(7px)",
+            transform: "scale(1.1)",
+            zIndex: 0,
+          }}
+        />
 
-      {/* HERO */}
-      {/* HERO */}
-<div className="hero"
-  style={{
-    position: "relative",
-    height: "320px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    overflow: "hidden",
-  }}
->
-  {/* BLURRED BACKGROUND */}
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      backgroundImage: `url(${card1})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      filter: "blur(7px)",
-      transform: "scale(1.1)", // avoids blur edges
-    }}
-  />
+        {/* Overlay */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            bgcolor: "rgba(0,0,0,0.55)",
+            zIndex: 1,
+          }}
+        />
 
-  {/* CONTENT (NOT BLURRED) */}
-  <div style={{ position: "relative", zIndex: 1, color: "white" }}>
-    <h1
-      style={{
-        color: "#ff7a18",
-        fontSize: "48px",
-      }}
-    >
-      Entertainment Events
-    </h1>
-
-    <p style={{ fontSize: "20px" }}>
-      Concerts, DJ Nights & Shows
-    </p>
-  </div>
-</div>
-
-
-      {/* EVENTS */}
-      <div className="trending-content">
-        <div className="trending-cards">
-        {events.length === 0 && (
-          <h2 style={{color:"white"}}>
-            No Entertainment Events Found
-          </h2>
-        )}
-
-        {events.map((item) => (
-
-          <div
-            className="event-card"
-            key={item._id}
+        {/* Content */}
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Typography
+            variant="h2"
+            sx={{ color: "#ff7a18", fontWeight: "bold" }}
           >
+            Entertainment Events
+          </Typography>
+          <Typography variant="h6">
+            Concerts, DJ Nights & Shows
+          </Typography>
+        </Box>
+      </Box>
 
-            {/* IMAGE */}
-            <div
-              className="card-img"
-              style={{
-                backgroundImage:
-                  `url(http://localhost:5000${item.bannerImage})`
-              }}
-            />
+      {/* ================= EVENTS ================= */}
+      <Box
+        sx={{
+          position: "relative",
+          p: { xs: 2, md: 4 },
+          mt: "-500px",
+          zIndex: 3,
+          maxWidth: "1400px",   // 🔑 limits width
+          mx: "auto",           // 🔑 centers container
+        }}
+      >
+        <Grid container spacing={3} justifyContent="center">
+          {events.length === 0 && (
+            <Grid item xs={12}>
+              <Typography align="center">
+                No Entertainment Events Found
+              </Typography>
+            </Grid>
+          )}
 
-            {/* BODY */}
-            <div className="card-body">
+          {events.map((item) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
+              <Card
+                sx={{
+                  height: "100%",
+                  bgcolor: "#14141c",
+                  color: "#fff",
+                  borderRadius: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "0.25s",
+                  "&:hover": {
+                    transform: "translateY(-6px)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    height: 200,
+                    backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
 
-              <h3>{item.eventName}</h3>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {item.eventName}
+                  </Typography>
 
-              <div className="info">
-                <i className="fa-solid fa-calendar"
-                   style={{color:"#ff6a00"}} /> {item.eventDate}
-              </div>
+                  <Typography variant="body2" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <CalendarMonthIcon fontSize="small" sx={{ color: "#ff6a00" }} />
+                    {item.eventDate}
+                  </Typography>
 
-              <div className="info">
-                <i className="fa-solid fa-location-dot"
-                   style={{color:"#ff6a00"}} /> {item.eventLocation}
-              </div>
+                  <Typography variant="body2" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <LocationOnIcon fontSize="small" sx={{ color: "#ff6a00" }} />
+                    {item.eventLocation}
+                  </Typography>
+                </CardContent>
 
-            </div>
+                <CardActions sx={{ mt: "auto", p: 2 }}>
+                  <Button
+                    component={Link}
+                    to={`/details/${item._id}`}
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      background:
+                        "linear-gradient(90deg, #ff7a18, #ff9f1c)",
+                      fontWeight: "bold",
+                      borderRadius: "50px"
+                    }}
+                  >
+                    Get Tickets
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-
-            {/* FOOTER */}
-            <div className="card-footer">
-
-              <Link to={`/details/${item._id}`}>
-                <button>
-                  Get Tickets
-                </button>
-              </Link>
-
-            </div>
-
-          </div>
-
-        ))}
-</div>
-      </div>
-
-    </section>
-
+    </Box>
   );
-
 };
 
 export default Entertainment;

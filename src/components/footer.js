@@ -1,190 +1,173 @@
-import './footer.css'
-import logo from "../images/logo.png"
+import { Box, Grid, Typography, TextField, Button, IconButton } from "@mui/material";
+import XIcon from "@mui/icons-material/X";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
+import logo from "../images/logo.png";
 
 const Footer = () => {
-  const wrapper = {
-    
-    color: "#ffffff",
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    paddingTop: "0px",
-  };
-
-  const newsletter = {
-    background: "linear-gradient(180deg, #0b0f1a, #070a12)",
-    textAlign: "center",
-    padding: "60px 20px",
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
-  };
-
-  const heading = {
-    fontSize: "28px",
-    fontWeight: 700,
-    marginBottom: "10px",
-  };
-
-  const subText = {
-    color: "#9aa4b2",
-    fontSize: "15px",
-    marginBottom: "26px",
-  };
-
-  const inputWrap = {
-    display: "flex",
-    justifyContent: "center",
-    gap: "12px",
-  };
-
-  const inputBox = {
-    background: "#0f1320",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: "10px",
-    padding: "12px 16px",
-    color: "#fff",
-    width: "260px",
-    outline: "none",
-  };
-
-  const button = {
-    background: "linear-gradient(135deg, #ff8a00, #ff5f00)",
-    border: "none",
-    borderRadius: "10px",
-    padding: "12px 22px",
-    color: "#fff",
-    fontWeight: 600,
-    cursor: "pointer",
-  };
-
-  const footerGrid = {
-    background:"black",
-    display: "grid",
-    gridTemplateColumns: "1.2fr repeat(4, 1fr)",
-    gap: "40px",
-    maxWidth: "1200px",
-    margin: "0px auto",
-    padding: " 40px",
-  };
-
-  const columnTitle = {
-    fontWeight: 600,
-    marginBottom: "14px",
-  };
-
-  const link = {
-    color: "#9aa4b2",
-    fontSize: "14px",
-    marginBottom: "10px",
-    cursor: "pointer",
-  };
-
-  const brand = {
-    fontWeight: 700,
-    color: "#ff7a18",
-    marginBottom: "12px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  };
-
-  const socialWrap = {
-    display: "flex",
-    gap: "12px",
-    marginTop: "14px",
-  };
-
-  const socialIcon = {
-    width: "32px",
-    height: "32px",
-    borderRadius: "50%",
-    background: "#0f1320",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    fontSize: "14px",
-  };
-
-  const bottomBar = {
-    borderTop: "1px solid rgba(255,255,255,0.06)",
-    background:"black",
-    padding: "20px 40px",
-    display: "flex",
-    justifyContent: "space-between",
-    color: "#9aa4b2",
-    fontSize: "13px",
-  };
-
   return (
-    <div style={wrapper}>
-      {/* NEWSLETTER */}
-      <div style={newsletter}>
-        <div style={heading}>Stay in the Loop</div>
-        <div style={subText}>
+    <Box sx={{ bgcolor: "#000", color: "#fff", mt: 8 }}>
+      {/* ================= NEWSLETTER ================= */}
+      <Box
+        sx={{
+          background: "linear-gradient(180deg, #0b0f1a, #070a12)",
+          textAlign: "center",
+          py: 8,
+          px: 2,
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Stay in the Loop
+        </Typography>
+
+        <Typography
+          sx={{ color: "#9aa4b2", maxWidth: 520, mx: "auto", mb: 4 }}
+        >
           Get personalized event recommendations and exclusive offers delivered
           to your inbox.
-        </div>
+        </Typography>
 
-        <div style={inputWrap}>
-          <input style={inputBox} placeholder="Enter your email" />
-          <button style={button}>Subscribe</button>
-        </div>
-      </div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          <TextField
+            placeholder="Enter your email"
+            variant="outlined"
+            sx={{
+              bgcolor: "#0f1320",
+              input: { color: "#fff" },
+              fieldset: {
+                borderColor: "rgba(255,255,255,0.1)",
+              },
+              width: 260,
+              borderRadius: 2,
+            }}
+          />
 
-      {/* FOOTER LINKS */}
-      <div style={{background:"black"}}>
-      <div style={footerGrid}>
-        <div>
-          <div style={{heigh:"30px",width:"200px"}}><img src={logo} style={{height:"100%",width:"100%"}}></img></div>
-          <div style={{ fontSize: "14px", color: "#9aa4b2", lineHeight: "1.6" }}>
-            Discover and book amazing events, powered by AI recommendations.
-          </div>
+          <Button
+            variant="contained"
+            sx={{
+              background: "linear-gradient(135deg, #ff8a00, #ff5f00)",
+              borderRadius: 2,
+              px: 4,
+              fontWeight: 600,
+            }}
+          >
+            Subscribe
+          </Button>
+        </Box>
+      </Box>
 
-          <div style={socialWrap}>
-            <div style={socialIcon}><i class="fa-brands fa-x-twitter" style={{color: "#d8e0ee;"}}></i></div>
-            <div style={socialIcon}><i class="fa-brands fa-facebook-f" style={{color: "#d8e0ee;"}}></i></div>
-            <div style={socialIcon}><i class="fa-brands fa-instagram"  style={{color: "#d8e0ee;"}}></i></div>
-            <div style={socialIcon}><i class="fa-brands fa-linkedin-in" style={{color: "#d8e0ee;"}}></i></div>
-          </div>
-        </div>
+      {/* ================= FOOTER GRID ================= */}
+      <Box sx={{ maxWidth: 1200, mx: "auto", px: 3, py: 6 }}>
+        <Grid container spacing={5}>
+          {/* BRAND */}
+          <Grid item xs={12} md={3}>
+            <Box sx={{ mb: 2 }}>
+              <img src={logo} alt="Eventora" style={{ width: 160 }} />
+            </Box>
 
-        <div>
-          <div style={columnTitle}>Product</div>
-          <div style={link}>Features</div>
-          <div style={link}>Pricing</div>
-          <div style={link}>For Organizers</div>
-          <div style={link}>Mobile App</div>
-        </div>
+            <Typography
+              variant="body2"
+              sx={{ color: "#9aa4b2", lineHeight: 1.7 }}
+            >
+              Discover and book amazing events, powered by AI recommendations.
+            </Typography>
 
-        <div>
-          <div style={columnTitle}>Company</div>
-          <div style={link}>About Us</div>
-          <div style={link}>Careers</div>
-          <div style={link}>Press</div>
-          <div style={link}>Contact</div>
-        </div>
+            <Box sx={{ display: "flex", gap: 1.5, mt: 2 }}>
+              {[XIcon, FacebookIcon, InstagramIcon, LinkedInIcon].map(
+                (Icon, i) => (
+                  <IconButton
+                    key={i}
+                    sx={{
+                      bgcolor: "#0f1320",
+                      color: "#d8e0ee",
+                      "&:hover": { bgcolor: "#ff7a18" },
+                    }}
+                  >
+                    <Icon fontSize="small" />
+                  </IconButton>
+                )
+              )}
+            </Box>
+          </Grid>
 
-        <div>
-          <div style={columnTitle}>Resources</div>
-          <div style={link}>Help Center</div>
-          <div style={link}>Blog</div>
-          <div style={link}>API Docs</div>
-          <div style={link}>Partners</div>
-        </div>
+          {/* LINKS */}
+          {[
+            {
+              title: "Product",
+              links: ["Features", "Pricing", "For Organizers", "Mobile App"],
+            },
+            {
+              title: "Company",
+              links: ["About Us", "Careers", "Press", "Contact"],
+            },
+            {
+              title: "Resources",
+              links: ["Help Center", "Blog", "API Docs", "Partners"],
+            },
+            {
+              title: "Legal",
+              links: [
+                "Privacy Policy",
+                "Terms of Service",
+                "Cookie Policy",
+              ],
+            },
+          ].map((section) => (
+            <Grid item xs={6} md={2} key={section.title}>
+              <Typography fontWeight={600} mb={2}>
+                {section.title}
+              </Typography>
 
-        <div>
-          <div style={columnTitle}>Legal</div>
-          <div style={link}>Privacy Policy</div>
-          <div style={link}>Terms of Service</div>
-          <div style={link}>Cookie Policy</div>
-        </div>
-      </div>
+              {section.links.map((item) => (
+                <Typography
+                  key={item}
+                  variant="body2"
+                  sx={{
+                    color: "#9aa4b2",
+                    mb: 1,
+                    cursor: "pointer",
+                    "&:hover": { color: "#fff" },
+                  }}
+                >
+                  {item}
+                </Typography>
+              ))}
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-      {/* BOTTOM */}
-      <div style={bottomBar}>
-        <div>© 2025 Eventora. All rights reserved.</div>
-        <div>Made with passion for unforgettable experiences</div>
-      </div>
-    </div>
-    </div>
+      {/* ================= BOTTOM BAR ================= */}
+      <Box
+        sx={{
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          py: 2,
+          px: 3,
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          color: "#9aa4b2",
+          fontSize: 13,
+        }}
+      >
+        <Typography variant="caption">
+          © 2025 Eventora. All rights reserved.
+        </Typography>
+        <Typography variant="caption">
+          Made with passion for unforgettable experiences
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 
