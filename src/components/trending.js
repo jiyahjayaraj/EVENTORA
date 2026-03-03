@@ -94,7 +94,8 @@ const Trending = ({ filters }) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-end",
-          mb: 5
+          mb: 5,
+          p:0
         }}
       >
 

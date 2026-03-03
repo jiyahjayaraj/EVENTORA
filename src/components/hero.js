@@ -159,7 +159,7 @@ const Hero = ({ onSearch }) => {
             borderRadius: "20px",
             p: 2,
             transition: "0.5s ease",
-            mt: isSearching ? 2 : 0
+            mt: isSearching ? "500px" : 0
           }}
         >
 
