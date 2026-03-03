@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import "./style.css";
+import {
+  Box,
+  Typography,
+  Card,
+  Button
+} from "@mui/material";
+
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+
 import { Link } from "react-router-dom";
 
 const Trending = ({ filters }) => {
@@ -8,17 +17,27 @@ const Trending = ({ filters }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
+
+  /* FETCH EVENTS */
+
   useEffect(() => {
+
     fetch("http://localhost:5000/api/events")
       .then(res => res.json())
       .then(data => {
+
         setEvents(data.events);
         setFilteredEvents(data.events);
+
       })
       .catch(console.error);
+
   }, []);
 
+
+
   /* FILTER EVENTS */
+
   useEffect(() => {
 
     if (!filters) return;
@@ -49,93 +68,267 @@ const Trending = ({ filters }) => {
   }, [filters, events]);
 
 
-  const displayedEvents = showAll
-    ? filteredEvents
-    : filteredEvents.slice(0, 4);
+
+  const displayedEvents =
+    showAll ? filteredEvents : filteredEvents.slice(0, 4);
+
+
 
   return (
 
-    <section className="trending">
+    <Box
+      sx={{
+        background:
+          "radial-gradient(circle at top, #0c0c11, #07080f)",
+        color: "white",
+        px: 6,
+        py: 8
+      }}
+    >
 
-      <div className="trending-header">
 
-        <div>
-          <span className="trending-tag">
+      {/* HEADER */}
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          mb: 5
+        }}
+      >
+
+        <Box>
+
+          <Typography
+            sx={{
+              color: "#ff7a18",
+              fontSize: 14,
+              fontWeight: 600,
+              mb: 1
+            }}
+          >
             TRENDING NOW
-          </span>
+          </Typography>
 
-          <h2>
+
+          <Typography
+            sx={{
+              fontSize: 36,
+              fontWeight: 700
+            }}
+          >
             Hottest Events This Week
-          </h2>
+          </Typography>
 
-          <p>
+
+          <Typography
+            sx={{
+              color: "#9ca3af",
+              mt: 1
+            }}
+          >
             Based on bookings, views, and real-time popularity
-          </p>
+          </Typography>
 
-        </div>
+        </Box>
 
-        <span
-          className="view-all"
+
+
+        <Typography
           onClick={() => setShowAll(!showAll)}
+          sx={{
+            color: "#ff7a18",
+            cursor: "pointer",
+            fontWeight: 500
+          }}
         >
-          {showAll ? "Show Less ←" : "View All Trending →"}
-        </span>
+          {showAll
+            ? "Show Less ←"
+            : "View All Trending →"}
+        </Typography>
 
-      </div>
+
+      </Box>
 
 
-      <div className="trending-cards">
+
+      {/* CARDS */}
+
+      <Box
+        sx={{
+          display: "flex",
+          gap: 4,
+          flexWrap: "wrap"
+        }}
+      >
+
 
         {displayedEvents.map((item) => (
 
-          <div
-            className="event-card"
+          <Card
             key={item._id}
+            sx={{
+              width: 320,
+              borderRadius: "18px",
+              background: "#0c0f1a",
+              color: "white",
+              overflow: "hidden",
+
+              display: "flex",
+              flexDirection: "column",
+              height: 420   // fixed height keeps buttons aligned
+            }}
           >
 
-            <div
-              className="card-img"
-              style={{
+
+            {/* IMAGE */}
+
+            <Box
+              sx={{
+                height: 200,
                 backgroundImage:
-                  `url(http://localhost:5000${item.bannerImage})`
+                  `url(http://localhost:5000${item.bannerImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center"
               }}
             />
 
-            <div className="card-body">
 
-              <h3>{item.eventName}</h3>
+            {/* BODY */}
 
-              <div className="info">
-                <i className="fa-solid fa-calendar"
-                   style={{color:"#ff6a00"}} /> {item.eventDate}
-              </div>
+            {/* BODY */}
 
-              <div className="info">
-                <i className="fa-solid fa-location-dot"
-                   style={{color:"#ff6a00"}} /> {item.eventLocation}
-              </div>
+            <Box
+              sx={{
+                p: 3,
+                flexGrow: 1,   // pushes footer down
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
 
-            </div>
+              <Typography
+                sx={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  mb: 2,
 
-            <div className="card-footer">
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden"
+                }}
+              >
+                {item.eventName}
+              </Typography>
 
-              <Link to={`/details/${item._id}`}>
-                <button>
+
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 1
+                }}
+              >
+
+                <CalendarMonthIcon
+                  sx={{
+                    color: "#ff7a18",
+                    fontSize: 18,
+                    mr: 1
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    color: "#9ca3af",
+                    fontSize: 14
+                  }}
+                >
+                  {item.eventDate}
+                </Typography>
+
+              </Box>
+
+
+
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >
+
+                <LocationOnIcon
+                  sx={{
+                    color: "#ff7a18",
+                    fontSize: 18,
+                    mr: 1
+                  }}
+                />
+
+                <Typography
+                  sx={{
+                    color: "#9ca3af",
+                    fontSize: 14
+                  }}
+                >
+                  {item.eventLocation}
+                </Typography>
+
+              </Box>
+
+            </Box>
+
+
+
+            {/* FOOTER */}
+
+            <Box
+              sx={{
+                borderTop: "1px solid #1f2937",
+                p: 2
+              }}
+            >
+
+              <Link
+                to={`/details/${item._id}`}
+                style={{ textDecoration: "none" }}
+              >
+
+                <Button
+                  variant="contained"
+                  sx={{
+                    background: "#ff7a18",
+                    borderRadius: "25px",
+                    textTransform: "none",
+                    px: 3,
+
+                    "&:hover": {
+                      background: "#ff6a00"
+                    }
+                  }}
+                >
                   Get Tickets
-                </button>
+                </Button>
+
               </Link>
 
-            </div>
+            </Box>
 
-          </div>
+          </Card>
 
         ))}
 
-      </div>
 
-    </section>
+      </Box>
+
+    </Box>
 
   );
 };
+
 
 export default Trending;

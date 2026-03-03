@@ -1,191 +1,181 @@
-import icon1 from '../images/i1.png'
-import icon2 from '../images/i2.png'
-import icon3 from '../images/i3.png'
-import icon4 from '../images/i4.png'
-import './org.css'
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Stack,
+} from "@mui/material";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ShieldIcon from "@mui/icons-material/Shield";
 
-const Organizer = () => {
-  const pageStyle = {
-    minHeight: "100vh",
-    background: "radial-gradient(circle at top, #121826 0%, #070a12 60%)",
-    color: "#ffffff",
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    padding: "70px 0px 0px",
-  };
+const Feature = ({ icon, title, text }) => (
+  <Box
+    sx={{
+      width: "100%",
+      boxSizing: "border-box",
+      display: "flex",
+      gap: 2,
+      p: 3,
+      borderRadius: 3,
+      background:
+        "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
+      border: "1px solid rgba(255,255,255,0.06)",
+    }}
+  >
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        borderRadius: 2,
+        bgcolor: "#ff8a00",
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      {icon}
+    </Box>
 
-  const centerText = {
-    textAlign: "center",
-    maxWidth: "720px",
-    margin: "0 auto",
-  };
+    <Box sx={{ minWidth: 0 }}>
+      <Typography fontWeight={600}>{title}</Typography>
+      <Typography fontSize={14} sx={{ opacity: 0.6, mt: 0.5 }}>
+        {text}
+      </Typography>
+    </Box>
+  </Box>
+);
 
-  const badgeStyle = {
-    color: "#ff7a18",
-    fontSize: "12px",
-    fontWeight: 600,
-    letterSpacing: "1px",
-    marginBottom: "14px",
-  };
-
-  const headingStyle = {
-    fontSize: "42px",
-    fontWeight: 700,
-    lineHeight: "1.2",
-    marginBottom: "16px",
-  };
-
-  const subText = {
-    color: "#9aa4b2",
-    fontSize: "16px",
-    lineHeight: "1.6",
-  };
-
-  const gridStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "24px",
-    maxWidth: "900px",
-    margin: "60px auto",
-  };
-
-  const cardStyle = {
-    background: "linear-gradient(180deg, #111827, #0b0f1a)",
-    borderRadius: "14px",
-    padding: "22px",
-    display: "flex",
-    gap: "16px",
-    alignItems: "flex-start",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
-    border: "1px solid rgba(255,255,255,0.05)",
-  };
-
-  const iconStyle = {
-    width: "40px",
-    height: "40px",
-    borderRadius: "12px",
-    background: "linear-gradient(135deg, #ff8a00, #ff5f00)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "18px",
-    flexShrink: 0,
-  };
-
-  const ctaStyle = {
-    maxWidth: "900px",
-    margin: "80px auto 0",
-    background: "linear-gradient(135deg, #0f172a, #111827)",
-    borderRadius: "16px",
-    padding: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    border: "1px solid rgba(255,255,255,0.06)",
-  };
-
-  const buttonPrimary = {
-    background: "linear-gradient(135deg, #ff8a00, #ff5f00)",
-    border: "none",
-    borderRadius: "10px",
-    padding: "12px 20px",
-    color: "#fff",
-    fontWeight: 600,
-    cursor: "pointer",
-    boxShadow: "0 10px 25px rgba(255,122,24,0.35)",
-  };
-
-  const buttonSecondary = {
-    background: "transparent",
-    border: "1px solid rgba(255,255,255,0.15)",
-    borderRadius: "10px",
-    padding: "12px 20px",
-    color: "#fff",
-    fontWeight: 500,
-    cursor: "pointer",
-    marginRight: "14px",
-  };
-
+export default function Landing() {
   return (
-    <div style={pageStyle}>
-      {/* HEADER */}
-      <div style={centerText}>
-        <div style={badgeStyle}>FOR EVENT ORGANIZERS</div>
-        <h1 style={headingStyle}>Host Events That Sell Out</h1>
-        <p style={subText}>
-          Join thousands of organizers using Eventora to create, manage,
-          and sell tickets for unforgettable experiences.
-        </p>
-      </div>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        color: "#fff",
+        background:
+          "radial-gradient(1200px 500px at top, #0f172a 0%, #05080f 55%, #02040a 100%)",
+        pt: 10,
+        pb: 12,
+      }}
+    >
+      <Container maxWidth="lg">
+        {/* Header */}
+        <Stack alignItems="center" spacing={2} mb={8}>
+          <Typography
+            fontSize={12}
+            letterSpacing={2}
+            sx={{ color: "#ff8a00" }}
+          >
+            FOR EVENT ORGANIZERS
+          </Typography>
 
-      {/* FEATURES */}
-      <div style={gridStyle}>
-        <div style={cardStyle}>
-          <div ><img style={iconStyle} src={icon1}></img></div>
-          <div>
-            <div style={{ fontWeight: 600, marginBottom: "6px" }}>
-              Powerful Analytics
-            </div>
-            <div style={{ fontSize: "14px", color: "#9aa4b2" }}>
-              Track ticket sales, attendee demographics, and revenue in real-time
-            </div>
-          </div>
-        </div>
+          <Typography
+            fontWeight={800}
+            textAlign="center"
+            sx={{ fontSize: { xs: 32, md: 44 } }}
+          >
+            Host Events That Sell Out
+          </Typography>
 
-        <div style={cardStyle}>
-           <div ><img style={iconStyle} src={icon2}></img></div>
-          <div>
-            <div style={{ fontWeight: 600, marginBottom: "6px" }}>
-              Easy Payments
-            </div>
-            <div style={{ fontSize: "14px", color: "#9aa4b2" }}>
-              Secure payment processing with instant payouts to your account
-            </div>
-          </div>
-        </div>
+          <Typography
+            textAlign="center"
+            sx={{
+              maxWidth: 620,
+              opacity: 0.45,
+              fontSize: 15,
+            }}
+          >
+            Join thousands of organizers using Eventora to create,
+            manage, and sell tickets for unforgettable experiences.
+          </Typography>
+        </Stack>
 
-        <div style={cardStyle}>
-           <div ><img style={iconStyle} src={icon3}></img></div>
-          <div>
-            <div style={{ fontWeight: 600, marginBottom: "6px" }}>
-              Marketing Tools
-            </div>
-            <div style={{ fontSize: "14px", color: "#9aa4b2" }}>
-              Promote your events to millions of users with built-in tools
-            </div>
-          </div>
-        </div>
+        {/* FEATURES — CSS GRID (PIXEL PERFECT) */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "1fr 1fr",
+            },
+            gap: 3,
+            mb: 10,
+          }}
+        >
+          <Feature
+            icon={<BarChartIcon />}
+            title="Powerful Analytics"
+            text="Track ticket sales, attendee demographics, and revenue in real-time."
+          />
+          <Feature
+            icon={<CreditCardIcon />}
+            title="Easy Payments"
+            text="Secure payment processing with instant payouts to your account."
+          />
+          <Feature
+            icon={<CampaignIcon />}
+            title="Marketing Tools"
+            text="Promote your events to millions of users with built-in tools."
+          />
+          <Feature
+            icon={<ShieldIcon />}
+            title="Trusted Platform"
+            text="Enterprise-grade security protecting you and your attendees."
+          />
+        </Box>
 
-        <div style={cardStyle}>
-           <div ><img style={iconStyle} src={icon4}></img></div>
-          <div>
-            <div style={{ fontWeight: 600, marginBottom: "6px" }}>
-              Trusted Platform
-            </div>
-            <div style={{ fontSize: "14px", color: "#9aa4b2" }}>
-              Enterprise-grade security protecting you and your attendees
-            </div>
-          </div>
-        </div>
-      </div>
+        {/* CTA */}
+        <Box
+          sx={{
+            p: { xs: 4, md: 5 },
+            borderRadius: 5,
+            background:
+              "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015))",
+            border: "1px solid rgba(255,255,255,0.07)",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", md: "center" },
+            gap: 3,
+          }}
+        >
+          <Box>
+            <Typography fontWeight={700} fontSize={20}>
+              Ready to create your first event?
+            </Typography>
+            <Typography sx={{ opacity: 0.5, mt: 0.5 }}>
+              Start for free. Only pay when you sell tickets.
+            </Typography>
+          </Box>
 
-      {/* CTA */}
-      <div style={ctaStyle}>
-        <div>
-          <div style={{ fontSize: "20px", fontWeight: 600 }}>
-            Ready to create your first event?
-          </div>
-          <div style={{ fontSize: "14px", color: "#9aa4b2", marginTop: "6px" }}>
-            Start for free. Only pay when you sell tickets.
-          </div>
-        </div>
-
-        <div>
-          <button style={buttonSecondary}>Learn More</button>
-          <button style={buttonPrimary}>Start Selling →</button>
-        </div>
-      </div>
-    </div>
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius:"50px",
+                color: "#fff",
+                borderColor: "rgba(255,255,255,0.25)",
+              }}
+            >
+              LEARN MORE
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                borderRadius:"50px",
+                bgcolor: "#ff8a00",
+                px: 3,
+                "&:hover": { bgcolor: "#ff9a20" },
+              }}
+            >
+              START SELLING →
+            </Button>
+          </Stack>
+        </Box>
+      </Container>
+    </Box>
   );
-};
-
-export default Organizer;
+}

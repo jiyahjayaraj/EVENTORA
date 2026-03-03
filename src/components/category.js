@@ -1,303 +1,250 @@
+import { Box, Typography, Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import card1 from '../images/card1.png'
-import card2 from '../images/card2.png'
-import card3 from '../images/card3.png'
-import card4 from '../images/card4.png'
-import card5 from '../images/card5.png'
-import card6 from '../images/card6.png'
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import SchoolIcon from "@mui/icons-material/School";
+import MemoryIcon from "@mui/icons-material/Memory";
+import WorkIcon from "@mui/icons-material/Work";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import PaletteIcon from "@mui/icons-material/Palette";
 
-import icon1 from '../images/ic1.png'
-import icon2 from '../images/ic2.png'
-import icon3 from '../images/ic3.png'
-import icon4 from '../images/ic4.png'
-import icon5 from '../images/ic5.png'
-import icon6 from '../images/ic6.png'
-
-import './style.css'
+import card1 from "../images/card1.png";
+import card2 from "../images/card2.png";
+import card3 from "../images/card3.png";
+import card4 from "../images/card4.png";
+import card5 from "../images/card5.png";
+import card6 from "../images/card6.png";
 
 const Category = () => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <div>
+  const categories = [
+    {
+      title: "Entertainment",
+      events: "2,450 events",
+      desc: "Concerts, DJ nights, comedy shows",
+      image: card1,
+      icon: <MusicNoteIcon />,
+      route: "/entertainment",
+      color: "#ff7a18"
+    },
+    {
+      title: "Education",
+      events: "1,890 events",
+      desc: "Workshops, seminars, training",
+      image: card2,
+      icon: <SchoolIcon />,
+      route: "/education",
+      color: "#38bdf8"
+    },
+    {
+      title: "Technology",
+      events: "980 events",
+      desc: "Hackathons, AI events, meetups",
+      image: card3,
+      icon: <MemoryIcon />,
+      route: "/technology",
+      color: "#34d399"
+    },
+    {
+      title: "Business",
+      events: "1,240 events",
+      desc: "Networking, summits, launches",
+      image: card4,
+      icon: <WorkIcon />,
+      route: "/business",
+      color: "#f59e0b"
+    },
+    {
+      title: "Sports & Fitness",
+      events: "760 events",
+      desc: "Marathons, tournaments, cycling",
+      image: card5,
+      icon: <FitnessCenterIcon />,
+      route: "/sports",
+      color: "#ef4444"
+    },
+    {
+      title: "Art & Culture",
+      events: "1,120 events",
+      desc: "Exhibitions, craft fairs, shows",
+      image: card6,
+      icon: <PaletteIcon />,
+      route: "/art",
+      color: "#a855f7"
+    }
+  ];
 
-            <div className="browse">
-                <p className="eyebrow">BROWSE CATEGORIES</p>
+  return (
+    <Box sx={{ background: "#05070b", color: "white" }}>
 
-                <h1>Find What Inspires You</h1>
+      {/* HEADER */}
 
-                <p className="subtitle">
-                    Explore events across diverse categories. From electrifying music festivals
-                    to transformative tech conferences.
-                </p>
-            </div>
+      <Box
+        sx={{
+          textAlign: "center",
+          py: 6,
+          background:
+            "radial-gradient(circle at center, #0d1220, #040507)"
+        }}
+      >
+
+        <Typography
+          sx={{
+            color: "#ff7a18",
+            fontSize: 14,
+            letterSpacing: 2
+          }}
+        >
+          BROWSE CATEGORIES
+        </Typography>
+
+        <Typography
+          sx={{
+            fontSize: 48,
+            fontWeight: 700,
+            mt: 1
+          }}
+        >
+          Find What Inspires You
+        </Typography>
+
+        <Typography
+          sx={{
+            color: "#a0aec0",
+            maxWidth: 600,
+            margin: "auto",
+            mt: 2
+          }}
+        >
+          Explore events across diverse categories. From electrifying music
+          festivals to transformative tech conferences.
+        </Typography>
+
+      </Box>
 
 
-            <div style={{
-                display: 'flex',
-                backgroundColor: 'black',
-                flexWrap: 'wrap',
-                justifyContent: 'space-around',
-                paddingBottom: '40px'
-            }}>
+      {/* CARDS */}
 
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-around",
+          gap: 4,
+          px: 4,
+          pb: 6
+        }}
+      >
 
-                {/* Entertainment */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/entertainment')}
-                    style={{ cursor: "pointer" }}
+        {categories.map((cat, i) => (
+
+          <Card
+            key={i}
+            onClick={() => navigate(cat.route)}
+            sx={{
+              width: 380,
+              height: 240,
+              borderRadius: "16px",
+              cursor: "pointer",
+              position: "relative",
+              overflow: "hidden",
+              transition: "0.3s",
+
+              "&:hover": {
+                transform: "scale(1.03)"
+              }
+            }}
+          >
+
+            {/* Background Image */}
+
+            <Box
+              component="img"
+              src={cat.image}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover"
+              }}
+            />
+
+            {/* Overlay */}
+
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.25))",
+                p: 3,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end"
+              }}
+            >
+
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+
+                {/* ICON */}
+
+                <Box
+                  sx={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: "10px",
+                    background: cat.color,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mr: 2
+                  }}
                 >
-                    <img src={card1} alt="" />
+                  {cat.icon}
+                </Box>
 
-                    <div className='overlay'>
 
-                        <div style={{ display: 'flex' }}>
+                <Box>
 
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon1}
-                                alt=""
-                            />
+                  <Typography fontWeight={600}>
+                    {cat.title}
+                  </Typography>
 
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Entertainment</h3>
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                      color: "#a0aec0"
+                    }}
+                  >
+                    {cat.events}
+                  </Typography>
 
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    2,450 events
-                                </p>
-                            </div>
+                </Box>
 
-                        </div>
+              </Box>
 
-                        <p style={{ color: '#a0aec0' }}>
-                            Concerts, DJ nights, comedy shows
-                        </p>
 
-                    </div>
+              <Typography
+                sx={{
+                  color: "#a0aec0",
+                  mt: 1,
+                  fontSize: 14
+                }}
+              >
+                {cat.desc}
+              </Typography>
 
-                </div>
+            </Box>
 
+          </Card>
 
-                {/* Education */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/education')}
-                    style={{ cursor: "pointer" }}
-                >
+        ))}
 
-                    <img src={card2} alt="" />
+      </Box>
 
-                    <div className='overlay'>
-
-                        <div style={{ display: 'flex' }}>
-
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon2}
-                                alt=""
-                            />
-
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Education</h3>
-
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    1,890 events
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <p style={{ color: '#a0aec0' }}>
-                            Workshops, seminars, training
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {/* Technology */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/technology')}
-                    style={{ cursor: "pointer" }}
-                >
-
-                    <img src={card3} alt="" />
-
-                    <div className='overlay'>
-
-                        <div style={{ display: 'flex' }}>
-
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon3}
-                                alt=""
-                            />
-
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Technology</h3>
-
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    980 events
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <p style={{ color: '#a0aec0' }}>
-                            Hackathons, AI events, meetups
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {/* Business */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/business')}
-                    style={{ cursor: "pointer" }}
-                >
-
-                    <img src={card4} alt="" />
-
-                    <div className='overlay'>
-
-                        <div style={{ display: 'flex' }}>
-
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon4}
-                                alt=""
-                            />
-
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Business</h3>
-
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    1,240 events
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <p style={{ color: '#a0aec0' }}>
-                            Networking, summits, launches
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {/* Sports */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/sports')}
-                    style={{ cursor: "pointer" }}
-                >
-
-                    <img src={card5} alt="" />
-
-                    <div className='overlay'>
-
-                        <div style={{ display: 'flex' }}>
-
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon5}
-                                alt=""
-                            />
-
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Sports & Fitness</h3>
-
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    760 events
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <p style={{ color: '#a0aec0' }}>
-                            Marathons, tournaments, cycling
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {/* Art */}
-                <div
-                    className='cards'
-                    onClick={() => navigate('/art')}
-                    style={{ cursor: "pointer" }}
-                >
-
-                    <img src={card6} alt="" />
-
-                    <div className='overlay'>
-
-                        <div style={{ display: 'flex' }}>
-
-                            <img
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '10px'
-                                }}
-                                src={icon6}
-                                alt=""
-                            />
-
-                            <div style={{ margin: '0px 20px' }}>
-                                <h3 style={{ margin: '0px' }}>Art & Culture</h3>
-
-                                <p style={{ margin: '0px', color: '#a0aec0' }}>
-                                    1,120 events
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <p style={{ color: '#a0aec0' }}>
-                            Exhibitions, craft fairs, shows
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    )
-}
+    </Box>
+  );
+};
 
 export default Category;

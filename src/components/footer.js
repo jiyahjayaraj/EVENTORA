@@ -8,7 +8,7 @@ import logo from "../images/logo.png";
 
 const Footer = () => {
   return (
-    <Box sx={{ bgcolor: "#000", color: "#fff", mt: 8 }}>
+    <Box sx={{ bgcolor: "#000", color: "#fff" }}>
       {/* ================= NEWSLETTER ================= */}
       <Box
         sx={{
