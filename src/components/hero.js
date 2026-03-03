@@ -1,9 +1,37 @@
-import "./style.css";
+import "./hero.css";
+import { useState, useEffect } from "react";
 
-const Hero = () => {
+const Hero = ({ onSearch }) => {
+
+  const [searchText, setSearchText] = useState("");
+  const [location, setLocation] = useState("");
+  const [date, setDate] = useState("");
+
+  const [isSearching, setIsSearching] = useState(false);
+
+
+  /* LIVE SEARCH */
+  useEffect(() => {
+
+    onSearch({
+      searchText,
+      location,
+      date
+    });
+
+    if (searchText || location || date) {
+      setIsSearching(true);
+    } else {
+      setIsSearching(false);
+    }
+
+  }, [searchText, location, date]);
+
+
   return (
+
     <section
-      className="hero"
+      className={`hero ${isSearching ? "hero-searching" : ""}`}
       style={{
         backgroundImage: "url('/pph.jpg')",
         backgroundSize: "cover",
@@ -11,49 +39,55 @@ const Hero = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
+
       <div className="hero-overlay"></div>
 
       <div className="hero-content">
-        <h1>
+
+        <h1 className={isSearching ? "hide-title" : ""}>
           Discover Events That <br />
           <span>Move You</span>
         </h1>
 
-        <div className="hero-stats">
-          <div>
-            <h3>50K+</h3>
-            <p>Events</p>
+
+        <div className={`hero-search ${isSearching ? "search-top" : ""}`}>
+
+          <div className="search-box">
+            <i className="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              placeholder="Search events"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
           </div>
-          <div>
-            <h3>10M+</h3>
-            <p>Users</p>
+
+
+          <div className="search-box">
+            <i className="fa-solid fa-location-dot"></i>
+
+            <input
+              placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </div>
-          <div>
-            <h3>500+</h3>
-            <p>Cities</p>
+
+
+          <div className="search-box">
+            <i className="fa-solid fa-calendar"></i>
+
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
           </div>
+
         </div>
 
-      <div className="hero-search">
-  <div className="search-box">
-    <i className="fa-solid fa-magnifying-glass"></i>
-    <input placeholder="Search events, artists, venues" />
-  </div>
-
-  <div className="search-box">
-    <i className="fa-solid fa-location-dot"></i>
-    <input placeholder="Location" />
-  </div>
-
-  <div className="search-box">
-    <i className="fa-solid fa-calendar"></i>
-    <input placeholder="" style={{color:'#a0aeb0'}} type="date"/>
-  </div>
-
-  <button className="search-btn">Search</button>
-</div>
-
       </div>
+
     </section>
   );
 };

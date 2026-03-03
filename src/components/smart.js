@@ -8,7 +8,7 @@ const Smart = () => {
   const containerStyle = {
     background: "linear-gradient(135deg, #0b0f1a 0%, #0a0d14 100%)",
     color: "#ffffff",
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
+    fontFamily: "'Inter', 'Segoe UI', sans-serif"
   };
 
   const headingStyle = {
@@ -85,7 +85,7 @@ const Smart = () => {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "80vh",
         background: containerStyle.background,
         padding: "50px 56px",
         display: "flex",
