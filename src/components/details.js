@@ -11,45 +11,126 @@ const Detail = () => {
     const [ticketTypes, setTicketTypes] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
     const [tickets, setTickets] = useState(1);
-    const [loading, setLoading] = useState(false); // ✅ added
+    const [loading, setLoading] = useState(false);
 
     const [comment, setComment] = useState("");
     const [rating, setRating] = useState(5);
     const [submitting, setSubmitting] = useState(false);
 
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authForm, setAuthForm] = useState({
+        name: "",
+        email: "",
+        password: ""
+    });
+
+    // ================= FETCH EVENT =================
     useEffect(() => {
         fetch(`http://localhost:5000/api/events/${id}`)
             .then((res) => res.json())
-            .then((data) => {
-                setEvent(data);
-            })
+            .then((data) => setEvent(data))
             .catch(console.error);
     }, [id]);
 
+    // ================= FETCH TICKETS =================
     useEffect(() => {
-        const fetchTicketTypes = async () => {
+        const fetchTickets = async () => {
             try {
                 const res = await axios.get(
                     `http://localhost:5000/api/tickets/event/${id}`
                 );
-
                 setTicketTypes(res.data);
-
                 if (res.data.length > 0) {
                     setSelectedTicket(res.data[0]);
                 }
             } catch (err) {
-                console.error("Error fetching ticket types", err);
+                console.error(err);
             }
         };
 
-        fetchTicketTypes();
+        fetchTickets();
     }, [id]);
 
     if (!event) return <p>Loading...</p>;
+
+    const price = selectedTicket?.price || 0;
+    const total = tickets * price;
+
+    // ================= CHECK LOGIN =================
+    const checkLogin = async () => {
+        try {
+            await axios.get("http://localhost:5000/api/profile", {
+                withCredentials: true
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    // ================= HANDLE PAYMENT =================
+    const handlePayment = async () => {
+        if (loading) return;
+        setLoading(true);
+
+        const loggedIn = await checkLogin();
+
+        const orderData = {
+            eventId: event._id,
+            ticketTypeId: selectedTicket?._id, // store selected ticket type
+            quantity: tickets,
+            totalAmount: total
+        };
+
+        // Save order in sessionStorage temporarily
+        sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+
+        if (!loggedIn) {
+            // If user not logged in → show register modal
+            setShowAuthModal(true);
+            setLoading(false);
+            return;
+        }
+
+        // If logged in → navigate to payment page
+        setLoading(false);
+        navigate("/payment");
+    };
+
+    // ================= REGISTER =================
+    const handleRegister = async () => {
+        if (!authForm.name || !authForm.email || !authForm.password) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            await axios.post(
+                "http://localhost:5000/api/users/register",
+                authForm,
+                { withCredentials: true }
+            );
+
+            alert("Registered & Logged in ✅");
+            setShowAuthModal(false);
+
+            // After registration → go to payment page
+            navigate("/payment");
+
+        } catch (error) {
+            alert(error.response?.data?.message || "Registration failed ❌");
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ================= FEEDBACK =================
     const handleSubmitFeedback = async () => {
         if (!comment.trim()) {
-            alert("Please enter a comment");
+            alert("Please write a comment");
             return;
         }
 
@@ -58,117 +139,50 @@ const Detail = () => {
 
             await axios.post(
                 `http://localhost:5000/api/events/${id}/feedback`,
-                {
-                    comment,
-                    rating
-                },
-                {
-                    withCredentials: true // if using cookies
-                    // OR use Authorization header if using token
-                }
+                { comment, rating },
+                { withCredentials: true }
             );
 
             alert("Feedback submitted successfully ✅");
-
             setComment("");
             setRating(5);
 
         } catch (error) {
+            alert("Feedback submission failed ❌");
             console.error(error);
-            alert("Failed to submit feedback ❌");
         } finally {
             setSubmitting(false);
         }
     };
 
-    const price = selectedTicket?.price || 0;
-    const total = tickets * price;
-
-    const handlePayment = async () => {
-
-        if (loading) return; // ✅ prevent double click
-
-        try {
-            setLoading(true);
-
-            const res = await axios.post(
-                "http://localhost:5000/api/order",
-                {
-                    eventId: event._id,
-                    quantity: tickets,
-                    totalAmount: total
-                },
-                {
-                    withCredentials: true
-                }
-            );
-
-            navigate("/payment", {
-                state: {
-                    order: res.data
-                }
-            });
-
-        } catch (error) {
-            console.error(error);
-            alert("Order failed");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const increase = () => {
-        setTickets((prev) => prev + 1);
-    };
-
+    const increase = () => setTickets((prev) => prev + 1);
     const decrease = () => {
-        if (tickets > 1) {
-            setTickets((prev) => prev - 1);
-        }
+        if (tickets > 1) setTickets((prev) => prev - 1);
     };
 
     return (
         <div className="detail-page">
 
-            {/* ================= TOP EVENT SECTION ================= */}
             <div className="event-header">
                 <div className="event-banner">
                     <img
                         src={`http://localhost:5000${event.bannerImage}`}
                         alt="event"
                     />
-
                 </div>
 
                 <div className="event-info">
                     <h1>{event.eventName}</h1>
-
-                    <div className="meta">
-                        <p>
-                            <i className="fa-solid fa-calendar" style={{ color: " #ff6a00" }}></i>
-                            {new Date(event.eventDate).toDateString()}
-                        </p>
-                        <p>
-                            <i className="fa-solid fa-location-dot" style={{ color: " #ff6a00" }}></i>
-                            {event.eventLocation}
-                        </p>
-                        <p>
-                            <i className="fa-solid fa-ticket" style={{ color: "#ff6a00" }}></i>
-                            Starting from ₹{ticketTypes[0]?.price}
-                        </p>
-                    </div>
-
-                    <p className="description">
-                        {event.description}
-                    </p>
+                    <p>{new Date(event.eventDate).toDateString()}</p>
+                    <p>{event.eventLocation}</p>
+                    <p>Starting from ₹{ticketTypes[0]?.price}</p>
+                    <p className="description">{event.description}</p>
                 </div>
             </div>
 
-            {/* ================= MAIN CONTENT ================= */}
-            {/* ================= MAIN CONTENT ================= */}
             <div className="booking-layout">
 
-                {/* ========= 1️⃣ TICKET SELECTION CARD ========= */}
+                {/* ================= BOOKING SECTION ================= */}
                 <div className="card booking-card">
                     <h2>Get Your Tickets</h2>
 
@@ -180,8 +194,9 @@ const Detail = () => {
                                 {ticketTypes.map((type) => (
                                     <div
                                         key={type._id}
-                                        className={`ticket-card ${selectedTicket?._id === type._id ? "active" : ""
-                                            }`}
+                                        className={`ticket-card ${
+                                            selectedTicket?._id === type._id ? "active" : ""
+                                        }`}
                                         onClick={() => setSelectedTicket(type)}
                                     >
                                         <span>{type.name}</span>
@@ -206,66 +221,105 @@ const Detail = () => {
                         </div>
                     </div>
                 </div>
+                {/* ================= END BOOKING SECTION ================= */}
 
-
-                {/* ========= 2️⃣ ORDER SUMMARY CARD ========= */}
                 <div className="card summary-card">
-                    <div className="summary">
-                        <h3>Order Summary</h3>
-                        <p># of Tickets: {tickets}</p>
-                        <p>Ticket Type: {selectedTicket?.name}</p>
-                        <p>Price per Ticket: ₹{price}</p>
-                        <p className="summary-total">Total Price: ₹{total}</p>
-                    </div>
+                    <h3>Order Summary</h3>
+                    <p>Tickets: {tickets}</p>
+                    <p>Type: {selectedTicket?.name}</p>
+                    <p>Total: ₹{total}</p>
 
                     <button
-                        className="pay-btn"
                         onClick={handlePayment}
                         disabled={loading}
+                        className="pay-btn"
                     >
                         {loading ? "Processing..." : "Proceed to Payment"}
                     </button>
-
-                    <p className="secure-text">
-                        <i className="fa-solid fa-lock"></i> Your information is safe and secure
-                    </p>
                 </div>
 
-
-                {/* ========= 3️⃣ FEEDBACK CARD ========= */}
+                {/* FEEDBACK CARD */}
                 <div className="card feedback-card">
                     <h3>Feedback & Rating</h3>
 
-                    <div className="rating-display">
-
-                        <div className="stars">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <i
-                                    key={star}
-                                    className={`fa-star ${star <= rating ? "fa-solid active" : "fa-regular"
-                                        }`}
-                                    onClick={() => setRating(star)}
-                                ></i>
-                            ))}
-                        </div>
+                    <div className="stars">
+                        {[1,2,3,4,5].map((star) => (
+                            <span
+                                key={star}
+                                style={{
+                                    cursor: "pointer",
+                                    fontSize: "22px",
+                                    color: star <= rating ? "orange" : "gray"
+                                }}
+                                onClick={() => setRating(star)}
+                            >
+                                ★
+                            </span>
+                        ))}
                     </div>
 
                     <textarea
-                        placeholder="Share your experience about this event..."
+                        placeholder="Write your feedback..."
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                     />
 
                     <button
-                        className="secondary-btn"
                         onClick={handleSubmitFeedback}
                         disabled={submitting}
+                        className="secondary-btn"
                     >
-                        {submitting ? "Submitting..." : "Submit Review"}
+                        {submitting ? "Submitting..." : "Submit Feedback"}
                     </button>
                 </div>
-
             </div>
+
+            {/* ================= REGISTER MODAL ================= */}
+            {showAuthModal && (
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <h2>Create Account</h2>
+
+                        <input
+                            type="text"
+                            placeholder="Full Name"
+                            value={authForm.name}
+                            onChange={(e) =>
+                                setAuthForm({ ...authForm, name: e.target.value })
+                            }
+                        />
+
+                        <input
+                            type="email"
+                            placeholder="Email Address"
+                            value={authForm.email}
+                            onChange={(e) =>
+                                setAuthForm({ ...authForm, email: e.target.value })
+                            }
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={authForm.password}
+                            onChange={(e) =>
+                                setAuthForm({ ...authForm, password: e.target.value })
+                            }
+                        />
+
+                        <button className="primary-btn" onClick={handleRegister}>
+                            Register & Continue
+                        </button>
+
+                        <button
+                            className="secondary-btn"
+                            onClick={() => setShowAuthModal(false)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
