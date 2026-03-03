@@ -138,102 +138,7 @@ body {
     font-size: 14px;
   }
 }
-.hero {
-  position: relative;
-  height: 70vh;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.75),
-    rgba(10, 10, 20, 0.85)
-  );
-}
-
-.hero-content {
-  position: relative;
-  text-align: center;
-  max-width: 1000px;
-  padding: 0 20px;
-}
-
-.hero-content h1 {
-  font-size: 64px;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.hero-content h1 span {
-  color: #ff7a18;
-}
-
-/* STATS */
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
-  margin: 30px 0 50px;
-}
-
-.hero-stats h3 {
-  color: #ff7a18;
-  font-size: 32px;
-  margin-bottom: 6px;
-}
-
-.hero-stats p {
-  font-size: 20px;
-  color: #cbd5e1;
-}
-
-/* SEARCH BAR */
-.hero-search {
-  display: flex;
-  align-items: center;
-  background: rgba(15, 15, 25, 0.9);
-  border-radius: 16px;
-  padding: 12px;
-  gap: 12px;
-  margin-bottom: 50px;
-}
-
-.search-box {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 16px;
-  background: #0f172a;
-  border-radius: 12px;
-  color: #94a3b8;
-  font-size: 25px;
-}
-
-.search-box input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  width: 100%;
-}
-
-.search-btn {
-  background: linear-gradient(90deg, #ff7a18, #ff9f1c);
-  border: none;
-  padding: 16px 28px;
-  border-radius: 14px;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
 
 /* ========================= */
 /* 📱 RESPONSIVE (ONLY ADDED) */
@@ -292,7 +197,6 @@ body {
 }
 
 .trending {
-  
   padding: 30px;
   background: radial-gradient(circle at top, #0c0c11, #0b0b12);
   color: #fff;
@@ -301,11 +205,10 @@ body {
 
 /* HEADER */
 .trending-header {
+  padding: 50px 30px 20px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 40px;
-  
 }
 
 .trending-tag {
@@ -336,6 +239,7 @@ body {
 
 /* GRID */
 .trending-cards {
+  padding: 20px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
@@ -474,7 +378,7 @@ body {
 .browse {
   font-family: "Inter", sans-serif;
   text-align: center;
-  padding: 80px 20px 50px;
+  padding: 50px 20px 50px;
   background:
     radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 60%),
     #0b0f14;

@@ -1,0 +1,34 @@
+/* PAGE BACKGROUND */
+.trending {
+    padding: 0%;
+  background: radial-gradient(circle at top, #0c0c11, #0b0b12);
+  color: #fff;
+}
+
+/* HERO (edge to edge) */
+.hero {
+  padding: 0;
+}
+
+/* CARDS WRAPPER (THIS gets padding) */
+.trending-content {
+  padding: 30px;
+}
+
+/* GRID */
+.trending-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .trending-content {
+    padding: 50px 20px;
+  }
+
+  .trending-cards {
+    grid-template-columns: 1fr;
+  }
+}

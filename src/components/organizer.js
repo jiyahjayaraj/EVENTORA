@@ -10,7 +10,7 @@ const Organizer = () => {
     background: "radial-gradient(circle at top, #121826 0%, #070a12 60%)",
     color: "#ffffff",
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    padding: "90px 56px",
+    padding: "70px 0px 0px",
   };
 
   const centerText = {
