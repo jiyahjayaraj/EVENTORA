@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./ticketPayment.css";
+import CelebrationIcon from "@mui/icons-material/Celebration";
+
+import {
+  Box,
+  Typography,
+  Button,
+  Paper,
+  Stack
+} from "@mui/material";
 
 const PaymentPage = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -13,23 +22,28 @@ const PaymentPage = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState(null);
 
   useEffect(() => {
-    // Get order from sessionStorage or location state
     let data = location.state?.order || sessionStorage.getItem("pendingOrder");
+
     if (data) {
       setOrderData(typeof data === "string" ? JSON.parse(data) : data);
     } else {
       setErrorMessage("No order data found. Please go back and select tickets.");
     }
+
     setLoading(false);
   }, [location.state]);
 
   const handleConfirmPayment = async () => {
-    if (!orderData) return;
+
+    if (!orderData || !selectedMethod) return;
+
     setProcessingPayment(true);
 
     try {
+
       const res = await axios.post(
         "http://localhost:5000/api/order",
         orderData,
@@ -37,17 +51,24 @@ const PaymentPage = () => {
       );
 
       if (res.data && res.data.order) {
+
         setOrderResponse(res.data.order);
         setSuccess(true);
 
-        // Clear temporary storage
         sessionStorage.removeItem("pendingOrder");
+
       } else {
         setErrorMessage("Failed to create order.");
       }
+
     } catch (error) {
+
       console.error("ORDER ERROR:", error.response?.data || error.message);
-      setErrorMessage(error.response?.data?.message || "Order creation failed.");
+
+      setErrorMessage(
+        error.response?.data?.message || "Order creation failed."
+      );
+
     } finally {
       setProcessingPayment(false);
     }
@@ -55,58 +76,159 @@ const PaymentPage = () => {
 
   if (loading) {
     return (
-      <div className="payment-container">
-        <h2>Preparing your order...</h2>
-      </div>
+      <Box sx={{ minHeight: "100vh", bgcolor: "#0f0f0f", color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Typography variant="h6">Preparing your order...</Typography>
+      </Box>
     );
   }
 
   if (errorMessage) {
     return (
-      <div className="payment-container">
-        <h2>{errorMessage}</h2>
-        <button onClick={() => navigate("/")}>Go Home</button>
-      </div>
+      <Box sx={{ minHeight: "100vh", bgcolor: "#0f0f0f", color: "white", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        <Typography variant="h6" mb={2}>{errorMessage}</Typography>
+
+        <Button
+          variant="contained"
+          onClick={() => navigate("/")}
+          sx={{
+            background: "linear-gradient(135deg,#ff7a18,#ff5200)"
+          }}
+        >
+          Go Home
+        </Button>
+      </Box>
     );
   }
 
   if (success) {
     return (
-      <div className="payment-container">
-        <h2 style={{ color: "#ff7a18" }}>🎉 Order Placed Successfully!</h2>
-        <p>Amount Paid: ₹{orderResponse.totalAmount}</p>
+      <Box sx={{ minHeight: "100vh", bgcolor: "#0f0f0f", color: "white", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            mb: 2
+          }}
+        >
+          <CelebrationIcon sx={{ color: "#ff9a00", fontSize: 40 }} />
 
-        <button className="home-btn" onClick={() => navigate("/")}>
+          <Typography variant="h4" sx={{ color: "#ff7a18" }}>
+            Order Placed Successfully!
+          </Typography>
+        </Box>
+
+        <Typography variant="h6" mb={3}>
+          Amount Paid: ₹{orderResponse.totalAmount}
+        </Typography>
+
+        <Button
+          variant="contained"
+          onClick={() => navigate("/")}
+          sx={{
+            background: "linear-gradient(135deg,#ff7a18,#ffb347)"
+          }}
+        >
           Go Home
-        </button>
-      </div>
+        </Button>
+      </Box>
     );
   }
 
+  const paymentMethods = [
+    "Google Pay",
+    "PhonePe",
+    "Credit / Debit Card",
+    "Net Banking"
+  ];
+
   return (
-    <div className="payment-container">
-      <h2>Payment</h2>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#0f0f0f",
+        color: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 3
+      }}
+    >
+      <Stack spacing={3} width={420}>
 
-      <div className="payment-options">
-        <h3>UPI / Wallet</h3>
-        <button className="pay-option">Google Pay</button>
-        <button className="pay-option">PhonePe</button>
+        <Typography
+          variant="h5"
+          textAlign="center"
+          sx={{ color: "#ff7a18", fontWeight: "bold" }}
+        >
+          Payment
+        </Typography>
 
-        <h3>Cards</h3>
-        <button className="pay-option">Add Credit/Debit Card</button>
+        <Paper
+          elevation={6}
+          sx={{
+            bgcolor: "#1a1a1a",
+            p: 3,
+            borderRadius: 3,
+            border: "1px solid #2a2a2a"
+          }}
+        >
 
-        <h3>More Options</h3>
-        <button className="pay-option">Net Banking</button>
-      </div>
+          <Typography variant="subtitle1" sx={{ color: "#ff7a18", mb: 1 }}>
+            Select Payment Method
+          </Typography>
 
-      <button
-        className="confirm-btn"
-        onClick={handleConfirmPayment}
-        disabled={processingPayment}
-      >
-        {processingPayment ? "Processing..." : `Pay ₹${orderData?.totalAmount}`}
-      </button>
-    </div>
+          <Stack spacing={1.5}>
+
+            {paymentMethods.map((method) => (
+
+              <Button
+                key={method}
+                fullWidth
+                onClick={() => setSelectedMethod(method)}
+                variant={selectedMethod === method ? "contained" : "outlined"}
+                sx={{
+                  color: "white",
+                  borderColor: "#333",
+                  background:
+                    selectedMethod === method
+                      ? "linear-gradient(135deg,#ff7a18,#ff5200)"
+                      : "#121212",
+                  "&:hover": {
+                    borderColor: "#ff7a18"
+                  }
+                }}
+              >
+                {method}
+              </Button>
+
+            ))}
+
+          </Stack>
+        </Paper>
+
+        <Button
+          fullWidth
+          variant="contained"
+          disabled={!selectedMethod || processingPayment}
+          onClick={handleConfirmPayment}
+          sx={{
+            py: 1.6,
+            fontSize: "16px",
+            fontWeight: "bold",
+            background: "linear-gradient(135deg,#ff7a18,#ff5200)",
+            "&:hover": {
+              background: "linear-gradient(135deg,#ff8c2a,#ff5e00)"
+            }
+          }}
+        >
+          {processingPayment
+            ? "Processing..."
+            : `Pay ₹${orderData?.totalAmount}`}
+        </Button>
+
+      </Stack>
+    </Box>
   );
 };
 

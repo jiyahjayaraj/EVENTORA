@@ -19,51 +19,21 @@ const Footer = () => {
           borderBottom: "1px solid rgba(255,255,255,0.06)",
         }}
       >
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Stay in the Loop
+        <Typography variant="h4" fontWeight="bold" color="#ff7a18" gutterBottom>
+          About Eventora
         </Typography>
 
         <Typography
-          sx={{ color: "#9aa4b2", maxWidth: 520, mx: "auto", mb: 4 }}
+          sx={{ color: "#9aa4b2", maxWidth: 560, mx: "auto", mb: 4, lineHeight: 1.8 }}
         >
-          Get personalized event recommendations and exclusive offers delivered
-          to your inbox.
+          Eventora is more than just an event platform — it’s where experiences come
+          to life. From concerts and workshops to tech meetups and cultural
+          celebrations, we make discovering, booking, and managing events effortless.
+          Whether you’re an attendee searching for your next experience or an organizer
+          bringing ideas to life, Eventora connects people through moments that truly
+          matter.
         </Typography>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 2,
-            flexWrap: "wrap",
-          }}
-        >
-          <TextField
-            placeholder="Enter your email"
-            variant="outlined"
-            sx={{
-              bgcolor: "#0f1320",
-              input: { color: "#fff" },
-              fieldset: {
-                borderColor: "rgba(255,255,255,0.1)",
-              },
-              width: 260,
-              borderRadius: 2,
-            }}
-          />
-
-          <Button
-            variant="contained"
-            sx={{
-              background: "linear-gradient(135deg, #ff8a00, #ff5f00)",
-              borderRadius: 2,
-              px: 4,
-              fontWeight: 600,
-            }}
-          >
-            Subscribe
-          </Button>
-        </Box>
       </Box>
 
       {/* ================= FOOTER GRID ================= */}
@@ -124,7 +94,7 @@ const Footer = () => {
             },
           ].map((section) => (
             <Grid item xs={6} md={2} key={section.title}>
-              <Typography fontWeight={600} mb={2}>
+              <Typography fontWeight={600} mb={2} color="#ff7a18">
                 {section.title}
               </Typography>
 

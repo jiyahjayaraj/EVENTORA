@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import logo from "../images/logo.png";
 
+import LogoutIcon from "@mui/icons-material/Logout";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import PersonIcon from "@mui/icons-material/Person";
+
 import {
   AppBar,
   Toolbar,
@@ -12,17 +16,28 @@ import {
   Modal,
   TextField,
   Paper,
-  Stack
+  Stack,
+  Menu,
+  MenuItem
 } from "@mui/material";
 
 const ORANGE = "#fe7816";
 const DARK_PAPER = "#12121a";
 
+const navItems = [
+  { label: "Events", id: "events" },
+  { label: "Categories", id: "categories" },
+  { label: "For Organizers", id: "organizers" },
+  { label: "About", id: "about" }
+];
+
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
-  const [showProfile, setShowProfile] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -30,11 +45,10 @@ const Navbar = () => {
     password: ""
   });
 
-  // ✅ Auto login check
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/profile", {
+        const res = await axios.get("http://localhost:5000/api/profile", {
           withCredentials: true
         });
         setUser(res.data.user);
@@ -45,7 +59,6 @@ const Navbar = () => {
     fetchProfile();
   }, []);
 
-  // ✅ LOGIN
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -63,7 +76,6 @@ const Navbar = () => {
     }
   };
 
-  // ✅ REGISTER
   const handleRegister = async () => {
     try {
       const res = await axios.post(
@@ -78,7 +90,6 @@ const Navbar = () => {
     }
   };
 
-  // ✅ LOGOUT
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -87,27 +98,46 @@ const Navbar = () => {
         { withCredentials: true }
       );
       setUser(null);
-      setShowProfile(false);
+      setAnchorEl(null);
     } catch (err) {
       console.error("Logout failed", err);
     }
   };
 
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <>
-      {/* NAVBAR */}
-      <AppBar position="static" elevation={0} sx={{ background: "black" }}>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          background: "rgba(0,0,0,0.95)",
+          backdropFilter: "blur(8px)"
+        }}
+      >
         <Toolbar sx={{ justifyContent: "space-between", py: 1 }}>
-          {/* Left */}
-          <Box display="flex" alignItems="center" gap={1}>
-            <img src={logo} alt="logo" height={36} />
+
+          {/* LOGO */}
+          <Box display="flex" alignItems="center">
+            <img
+              src={logo}
+              alt="logo"
+              height={36}
+              style={{ cursor: "pointer" }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            />
           </Box>
 
-          {/* Center */}
+          {/* NAVIGATION */}
           <Stack direction="row" spacing={4}>
-            {["Events", "Categories", "For Organizers", "About"].map((item) => (
+            {navItems.map((item) => (
               <Typography
-                key={item}
+                key={item.label}
+                onClick={() => scrollToSection(item.id)}
                 sx={{
                   cursor: "pointer",
                   fontWeight: 500,
@@ -121,7 +151,7 @@ const Navbar = () => {
                     left: 0,
                     bottom: -4,
                     background: ORANGE,
-                    transition: "0.3s"
+                    transition: "0.25s"
                   },
                   "&:hover": {
                     color: ORANGE,
@@ -129,13 +159,28 @@ const Navbar = () => {
                   }
                 }}
               >
-                {item}
+                {item.label}
               </Typography>
             ))}
           </Stack>
 
-          {/* Right */}
-          <Box display="flex" alignItems="center" gap={2} position="relative">
+          {/* RIGHT SIDE */}
+          <Box display="flex" alignItems="center" gap={2}>
+
+            {/* CREATE EVENT BUTTON */}
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: ORANGE,
+                color: "#000",
+                borderRadius: "20px",
+                fontWeight: 600,
+                "&:hover": { bgcolor: "#ff8c35" }
+              }}
+            >
+              Create Event
+            </Button>
+
             {user ? (
               <>
                 <Avatar
@@ -145,53 +190,37 @@ const Navbar = () => {
                     cursor: "pointer",
                     fontWeight: 700
                   }}
-                  onClick={() => setShowProfile(!showProfile)}
+                  onClick={(e) => setAnchorEl(e.currentTarget)}
                 >
                   {user.name?.charAt(0).toUpperCase()}
                 </Avatar>
 
-                <Typography
-                  sx={{ cursor: "pointer", color: "#fff", fontWeight: 500 }}
-                  onClick={() => setShowProfile(!showProfile)}
-                >
-                  {user.name}
-                </Typography>
-
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={handleLogout}
-                  sx={{
-                    borderColor: ORANGE,
-                    color: ORANGE,
-                    "&:hover": { backgroundColor: ORANGE, color: "#000" }
+                {/* PROFILE MENU */}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={() => setAnchorEl(null)}
+                  PaperProps={{
+                    sx: {
+                      bgcolor: DARK_PAPER,
+                      color: "#fff",
+                      borderRadius: 2,
+                      minWidth: 180
+                    }
                   }}
                 >
-                  Logout
-                </Button>
+                  <MenuItem>
+                    <PersonIcon sx={{ mr: 1 }} /> My Profile
+                  </MenuItem>
 
-                {showProfile && (
-                  <Paper
-                    elevation={6}
-                    sx={{
-                      position: "absolute",
-                      top: 60,
-                      right: 0,
-                      p: 2,
-                      borderRadius: 2,
-                      minWidth: 220,
-                      bgcolor: DARK_PAPER,
-                      color: "#fff"
-                    }}
-                  >
-                    <Typography>
-                      <strong>Name:</strong> {user.name}
-                    </Typography>
-                    <Typography>
-                      <strong>Email:</strong> {user.email}
-                    </Typography>
-                  </Paper>
-                )}
+                  <MenuItem>
+                    <ConfirmationNumberIcon sx={{ mr: 1 }} /> My Tickets
+                  </MenuItem>
+
+                  <MenuItem onClick={handleLogout}>
+                    <LogoutIcon sx={{ mr: 1 }} /> Logout
+                  </MenuItem>
+                </Menu>
               </>
             ) : (
               <Button
@@ -199,7 +228,7 @@ const Navbar = () => {
                 onClick={() => setShowModal(true)}
                 sx={{
                   borderColor: ORANGE,
-                  borderRadius:"50px",
+                  borderRadius: "50px",
                   color: ORANGE,
                   "&:hover": { backgroundColor: ORANGE, color: "#000" }
                 }}
@@ -211,7 +240,7 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
 
-      {/* MODAL */}
+      {/* LOGIN MODAL */}
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <Paper
           sx={{
@@ -239,21 +268,16 @@ const Navbar = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                InputProps={{ sx: { backgroundColor: "#1b1b26", color: "#fff" } }}
-                InputLabelProps={{ sx: { color: "#ccc" } }}
               />
             )}
 
             <TextField
               label="Email"
-              type="email"
               variant="filled"
               fullWidth
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              InputProps={{ sx: { backgroundColor: "#1b1b26", color: "#fff" } }}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
             />
 
             <TextField
@@ -264,17 +288,11 @@ const Navbar = () => {
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              InputProps={{ sx: { backgroundColor: "#1b1b26", color: "#fff" } }}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
             />
 
             <Button
               variant="contained"
-              sx={{
-                bgcolor: ORANGE,
-                color: "#000",
-                "&:hover": { bgcolor: "#fe7816" }
-              }}
+              sx={{ bgcolor: ORANGE, color: "#000" }}
               onClick={isLogin ? handleLogin : handleRegister}
             >
               {isLogin ? "Login" : "Register"}
@@ -282,21 +300,13 @@ const Navbar = () => {
 
             <Typography
               variant="body2"
-              sx={{ cursor: "pointer", textAlign: "center", color: "#ccc" }}
+              sx={{ textAlign: "center", cursor: "pointer", color: "#ccc" }}
               onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin
-                ? "New user? Click to Sign Up"
-                : "Already have an account? Click to Login"}
+                ? "New user? Sign Up"
+                : "Already have an account? Login"}
             </Typography>
-
-            <Button
-              variant="text"
-              color="error"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </Button>
           </Stack>
         </Paper>
       </Modal>

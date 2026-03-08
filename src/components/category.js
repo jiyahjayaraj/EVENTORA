@@ -77,6 +77,7 @@ const Category = () => {
   ];
 
   return (
+
     <Box sx={{ background: "#05070b", color: "white" }}>
 
       {/* HEADER */}
@@ -102,7 +103,7 @@ const Category = () => {
 
         <Typography
           sx={{
-            fontSize: 48,
+            fontSize: { xs: 32, md: 48 },
             fontWeight: 700,
             mt: 1
           }}
@@ -125,16 +126,15 @@ const Category = () => {
       </Box>
 
 
-      {/* CARDS */}
+      {/* CATEGORY GRID */}
 
       <Box
         sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(350px,1fr))",
           gap: 4,
-          px: 4,
-          pb: 6
+          px: { xs: 3, md: 6 },
+          py: 6
         }}
       >
 
@@ -143,34 +143,56 @@ const Category = () => {
           <Card
             key={i}
             onClick={() => navigate(cat.route)}
+
             sx={{
-              width: 380,
               height: 240,
               borderRadius: "16px",
               cursor: "pointer",
               position: "relative",
               overflow: "hidden",
-              transition: "0.3s",
+
+              background: "transparent",
+              boxShadow: "none",
+
+              transition: "all 0.3s ease",
 
               "&:hover": {
-                transform: "scale(1.03)"
+                transform: "translateY(-6px)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.6)"
               }
             }}
           >
 
-            {/* Background Image */}
+            {/* IMAGE CONTAINER */}
 
             <Box
-              component="img"
-              src={cat.image}
               sx={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover"
+                overflow: "hidden"
               }}
-            />
+            >
 
-            {/* Overlay */}
+              <Box
+                component="img"
+                src={cat.image}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+
+                  transition: "transform 0.6s ease",
+
+                  ".MuiCard-root:hover &": {
+                    transform: "scale(1.08)"
+                  }
+                }}
+              />
+
+            </Box>
+
+
+            {/* OVERLAY */}
 
             <Box
               sx={{
@@ -178,10 +200,12 @@ const Category = () => {
                 inset: 0,
                 background:
                   "linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.25))",
+
                 p: 3,
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "flex-end"
+                justifyContent: "flex-end",
+                color: "#fff"
               }}
             >
 
@@ -203,7 +227,6 @@ const Category = () => {
                 >
                   {cat.icon}
                 </Box>
-
 
                 <Box>
 
@@ -244,7 +267,9 @@ const Category = () => {
       </Box>
 
     </Box>
+
   );
+
 };
 
 export default Category;

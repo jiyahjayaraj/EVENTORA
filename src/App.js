@@ -11,6 +11,7 @@ import Footer from "./components/footer";
 import Detail from "./components/details";
 import PaymentPage from "./components/ticketPayment";
 
+// Category pages
 import Entertainment from "./pages/Entertainment";
 import Education from "./pages/Education";
 import Technology from "./pages/Technology";
@@ -19,26 +20,39 @@ import Sports from "./pages/Sports";
 import Art from "./pages/Art";
 
 function App() {
-
   const [filters, setFilters] = useState({});
 
   return (
     <BrowserRouter>
-
+      {/* NAVBAR ALWAYS VISIBLE */}
       <Navbar />
 
       <Routes>
-
-        {/* HOME PAGE */}
+        {/* HOME PAGE (SCROLL SECTIONS) */}
         <Route
           path="/"
           element={
             <>
-              <Hero onSearch={setFilters} />
-              <Trending filters={filters} />
-              <Category />
-              <Smart />
-              <Organizer />
+              <section id="hero">
+                <Hero onSearch={setFilters} />
+              </section>
+
+              <section id="events">
+                <Trending filters={filters} />
+              </section>
+
+              <section id="categories">
+                <Category />
+              </section>
+
+              <section >
+                <Smart />
+              </section>
+
+      
+              <section id="organizers">
+                <Organizer />
+              </section>
             </>
           }
         />
@@ -49,7 +63,6 @@ function App() {
         {/* PAYMENT */}
         <Route path="/payment" element={<PaymentPage />} />
 
-
         {/* CATEGORY PAGES */}
         <Route path="/entertainment" element={<Entertainment />} />
         <Route path="/education" element={<Education />} />
@@ -57,12 +70,12 @@ function App() {
         <Route path="/business" element={<Business />} />
         <Route path="/sports" element={<Sports />} />
         <Route path="/art" element={<Art />} />
-
-
       </Routes>
 
-      <Footer />
-
+      {/* FOOTER ALWAYS VISIBLE */}
+      <section id="about">
+                <Footer />
+              </section>
     </BrowserRouter>
   );
 }

@@ -17,7 +17,6 @@ const Trending = ({ filters }) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-
   /* FETCH EVENTS */
 
   useEffect(() => {
@@ -35,7 +34,6 @@ const Trending = ({ filters }) => {
   }, []);
 
 
-
   /* FILTER EVENTS */
 
   useEffect(() => {
@@ -48,17 +46,18 @@ const Trending = ({ filters }) => {
         event.eventName
           .toLowerCase()
           .includes(filters.searchText?.toLowerCase() || "")
+
         &&
 
         event.eventLocation
           .toLowerCase()
           .includes(filters.location?.toLowerCase() || "")
+
         &&
 
         (filters.date
           ? event.eventDate.includes(filters.date)
           : true)
-
       );
 
     });
@@ -68,11 +67,14 @@ const Trending = ({ filters }) => {
   }, [filters, events]);
 
 
-
   const displayedEvents =
     showAll ? filteredEvents : filteredEvents.slice(0, 4);
 
-
+    const isSearching =
+  filters?.searchText ||
+  filters?.location ||
+  filters?.date ||
+  filters?.category;
 
   return (
 
@@ -81,23 +83,23 @@ const Trending = ({ filters }) => {
         background:
           "radial-gradient(circle at top, #0c0c11, #07080f)",
         color: "white",
-        px: 6,
+        px: { xs: 3, md: 6 },
         py: 8
       }}
     >
 
-
       {/* HEADER */}
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          mb: 5,
-          p:0
-        }}
-      >
+{!isSearching && (
+
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    mb: 5
+  }}
+>
 
         <Box>
 
@@ -112,7 +114,6 @@ const Trending = ({ filters }) => {
             TRENDING NOW
           </Typography>
 
-
           <Typography
             sx={{
               fontSize: 36,
@@ -121,7 +122,6 @@ const Trending = ({ filters }) => {
           >
             Hottest Events This Week
           </Typography>
-
 
           <Typography
             sx={{
@@ -133,8 +133,6 @@ const Trending = ({ filters }) => {
           </Typography>
 
         </Box>
-
-
 
         <Typography
           onClick={() => setShowAll(!showAll)}
@@ -149,61 +147,104 @@ const Trending = ({ filters }) => {
             : "View All Trending →"}
         </Typography>
 
-
       </Box>
 
-
-
-      {/* CARDS */}
+)}
+      {/* EVENT GRID */}
 
       <Box
         sx={{
-          display: "flex",
-          gap: 4,
-          flexWrap: "wrap"
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(280px,1fr))",
+          gap: 4
         }}
       >
-
 
         {displayedEvents.map((item) => (
 
           <Card
             key={item._id}
+
             sx={{
-              width: 320,
               borderRadius: "18px",
-              background: "#0c0f1a",
+              background: "#1f1f24",
               color: "white",
               overflow: "hidden",
 
               display: "flex",
               flexDirection: "column",
-              height: 420   // fixed height keeps buttons aligned
+              height: 420,
+
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                transform: "translateY(-8px)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.6)"
+              }
             }}
           >
-
 
             {/* IMAGE */}
 
             <Box
               sx={{
                 height: 200,
-                backgroundImage:
-                  `url(http://localhost:5000${item.bannerImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center"
+                position: "relative",
+                overflow: "hidden"
               }}
-            />
+            >
 
+              {/* CATEGORY BADGE */}
 
-            {/* BODY */}
+              {item.category && (
+
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 12,
+                    left: 12,
+                    background: "#ff7a18",
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: "8px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    zIndex: 2
+                  }}
+                >
+                  {item.category}
+                </Box>
+
+              )}
+
+              {/* IMAGE */}
+
+              <Box
+                sx={{
+                  height: "100%",
+                  backgroundImage:
+                    `url(http://localhost:5000${item.bannerImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+
+                  transition: "transform 0.5s ease",
+
+                  ".MuiCard-root:hover &": {
+                    transform: "scale(1.08)"
+                  }
+                }}
+              />
+
+            </Box>
+
 
             {/* BODY */}
 
             <Box
               sx={{
                 p: 3,
-                flexGrow: 1,   // pushes footer down
+                flexGrow: 1,
                 display: "flex",
                 flexDirection: "column"
               }}
@@ -225,6 +266,7 @@ const Trending = ({ filters }) => {
               </Typography>
 
 
+              {/* DATE */}
 
               <Box
                 sx={{
@@ -248,12 +290,17 @@ const Trending = ({ filters }) => {
                     fontSize: 14
                   }}
                 >
-                  {item.eventDate}
+                  {new Date(item.eventDate).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                  })}
                 </Typography>
 
               </Box>
 
 
+              {/* LOCATION */}
 
               <Box
                 sx={{
@@ -284,12 +331,11 @@ const Trending = ({ filters }) => {
             </Box>
 
 
-
             {/* FOOTER */}
 
             <Box
               sx={{
-                borderTop: "1px solid #1f2937",
+                borderTop: "1px solid #2a2a2f",
                 p: 2
               }}
             >
@@ -300,15 +346,18 @@ const Trending = ({ filters }) => {
               >
 
                 <Button
+                  fullWidth
                   variant="contained"
                   sx={{
-                    background: "#ff7a18",
-                    borderRadius: "25px",
+                    background:
+                      "linear-gradient(45deg,#ff7a18,#ffb347)",
+                    borderRadius: "30px",
                     textTransform: "none",
-                    px: 3,
+                    fontWeight: 600,
 
                     "&:hover": {
-                      background: "#ff6a00"
+                      background:
+                        "linear-gradient(45deg,#ff6a00,#ff9a30)"
                     }
                   }}
                 >
@@ -323,13 +372,12 @@ const Trending = ({ filters }) => {
 
         ))}
 
-
       </Box>
 
     </Box>
 
   );
-};
 
+};
 
 export default Trending;
