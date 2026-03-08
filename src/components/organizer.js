@@ -4,11 +4,14 @@ import {
   Typography,
   Button,
   Stack,
+  TextField
 } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ShieldIcon from "@mui/icons-material/Shield";
+import { useState } from "react";
+import axios from "axios";
 
 const Feature = ({ icon, title, text }) => (
   <Box
@@ -50,6 +53,31 @@ const Feature = ({ icon, title, text }) => (
 );
 
 export default function Landing() {
+
+  const [openForm, setOpenForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    organization: "",
+    eventType: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+await axios.post("http://localhost:5000/api/apply", formData);
+      alert("Application sent successfully!");
+      setOpenForm(false);
+    } catch (error) {
+      alert("Error sending application");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -62,13 +90,10 @@ export default function Landing() {
       }}
     >
       <Container maxWidth="lg">
+
         {/* Header */}
         <Stack alignItems="center" spacing={2} mb={8}>
-          <Typography
-            fontSize={12}
-            letterSpacing={2}
-            sx={{ color: "#ff8a00" }}
-          >
+          <Typography fontSize={12} letterSpacing={2} sx={{ color: "#ff8a00" }}>
             FOR EVENT ORGANIZERS
           </Typography>
 
@@ -93,7 +118,7 @@ export default function Landing() {
           </Typography>
         </Stack>
 
-        {/* FEATURES — CSS GRID (PIXEL PERFECT) */}
+        {/* FEATURES */}
         <Box
           sx={{
             display: "grid",
@@ -155,26 +180,67 @@ export default function Landing() {
             <Button
               variant="outlined"
               sx={{
-                borderRadius:"50px",
+                borderRadius: "50px",
                 color: "#fff",
                 borderColor: "rgba(255,255,255,0.25)",
               }}
             >
               LEARN MORE
             </Button>
+
             <Button
               variant="contained"
               sx={{
-                borderRadius:"50px",
+                borderRadius: "50px",
                 bgcolor: "#ff8a00",
                 px: 3,
                 "&:hover": { bgcolor: "#ff9a20" },
               }}
+              onClick={() => setOpenForm(true)}
             >
               START SELLING →
             </Button>
           </Stack>
         </Box>
+
+        {/* Vendor Form Modal */}
+        {openForm && (
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              bgcolor: "rgba(0,0,0,0.7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 999,
+            }}
+          >
+            <Box sx={{ bgcolor: "#111", p: 4, borderRadius: 3, width: 400 }}>
+              <Typography mb={2} fontWeight={600}>
+                Vendor Application
+              </Typography>
+
+              <TextField fullWidth label="Name" name="name" onChange={handleChange} sx={{ mb: 2 }} />
+              <TextField fullWidth label="Email" name="email" onChange={handleChange} sx={{ mb: 2 }} />
+              <TextField fullWidth label="Phone" name="phone" onChange={handleChange} sx={{ mb: 2 }} />
+              <TextField fullWidth label="Organization" name="organization" onChange={handleChange} sx={{ mb: 2 }} />
+              <TextField fullWidth label="Event Type" name="eventType" onChange={handleChange} sx={{ mb: 2 }} />
+
+              <Button fullWidth variant="contained" onClick={handleSubmit}>
+                Submit
+              </Button>
+
+              <Button fullWidth sx={{ mt: 1 }} onClick={() => setOpenForm(false)}>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        )}
+
       </Container>
     </Box>
   );
