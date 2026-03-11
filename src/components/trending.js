@@ -5,6 +5,8 @@ import {
   Card,
   Button
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getEventsRequest } from "../container/eventcontainer/slice";
 
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -13,53 +15,57 @@ import { Link } from "react-router-dom";
 
 const Trending = ({ filters }) => {
 
-  const [events, setEvents] = useState([]);
+  const dispatch = useDispatch();
+
+  const { events } = useSelector((state) => state.events);
+  console.log("Events from Redux:", events);
+
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
   /* FETCH EVENTS */
 
   useEffect(() => {
+    dispatch(getEventsRequest());
+  }, [dispatch]);
 
-    fetch("http://localhost:5000/api/events")
-      .then(res => res.json())
-      .then(data => {
 
-        setEvents(data.events);
-        setFilteredEvents(data.events);
+  /* SET EVENTS WHEN STORE UPDATES */
 
-      })
-      .catch(console.error);
-
-  }, []);
+  useEffect(() => {
+    setFilteredEvents(events);
+  }, [events]);
 
 
   /* FILTER EVENTS */
+  const categoryGroups = {
+    "sport&fitness": ["sports", "fitness"],
+    "art&culture": ["art", "culture"]
+  };
 
   useEffect(() => {
 
     if (!filters) return;
 
     const filtered = events.filter((event) => {
+      const name = event.eventName?.toLowerCase() || "";
+      const location = event.eventLocation?.toLowerCase() || "";
+      const type = event.eventType?.name?.toLowerCase().trim() || "";
+
+      const category = filters.category?.toLowerCase();
+
+      const categoryMatch =
+        !category ||
+        (categoryGroups[category]
+          ? categoryGroups[category].includes(type)
+          : type.includes(category));
 
       return (
-        event.eventName
-          .toLowerCase()
-          .includes(filters.searchText?.toLowerCase() || "")
-
-        &&
-
-        event.eventLocation
-          .toLowerCase()
-          .includes(filters.location?.toLowerCase() || "")
-
-        &&
-
-        (filters.date
-          ? event.eventDate.includes(filters.date)
-          : true)
+        name.includes(filters.searchText?.toLowerCase() || "") &&
+        location.includes(filters.location?.toLowerCase() || "") &&
+        (!filters.date || event.eventDate.includes(filters.date)) &&
+        categoryMatch
       );
-
     });
 
     setFilteredEvents(filtered);
@@ -70,11 +76,11 @@ const Trending = ({ filters }) => {
   const displayedEvents =
     showAll ? filteredEvents : filteredEvents.slice(0, 4);
 
-    const isSearching =
-  filters?.searchText ||
-  filters?.location ||
-  filters?.date ||
-  filters?.category;
+  const isSearching =
+    filters?.searchText ||
+    filters?.location ||
+    filters?.date ||
+    filters?.category;
 
   return (
 
@@ -88,68 +94,67 @@ const Trending = ({ filters }) => {
       }}
     >
 
-      {/* HEADER */}
+      {!isSearching && (
 
-{!isSearching && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            mb: 5
+          }}
+        >
 
-<Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    mb: 5
-  }}
->
+          <Box>
 
-        <Box>
+            <Typography
+              sx={{
+                color: "#ff7a18",
+                fontSize: 14,
+                fontWeight: 600,
+                mb: 1
+              }}
+            >
+              TRENDING NOW
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: 36,
+                fontWeight: 700
+              }}
+            >
+              Hottest Events This Week
+            </Typography>
+
+            <Typography
+              sx={{
+                color: "#9ca3af",
+                mt: 1
+              }}
+            >
+              Based on bookings, views, and real-time popularity
+            </Typography>
+
+          </Box>
 
           <Typography
+            onClick={() => setShowAll(!showAll)}
             sx={{
               color: "#ff7a18",
-              fontSize: 14,
-              fontWeight: 600,
-              mb: 1
+              cursor: "pointer",
+              fontWeight: 500
             }}
           >
-            TRENDING NOW
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: 36,
-              fontWeight: 700
-            }}
-          >
-            Hottest Events This Week
-          </Typography>
-
-          <Typography
-            sx={{
-              color: "#9ca3af",
-              mt: 1
-            }}
-          >
-            Based on bookings, views, and real-time popularity
+            {showAll
+              ? "Show Less ←"
+              : "View All Trending →"}
           </Typography>
 
         </Box>
 
-        <Typography
-          onClick={() => setShowAll(!showAll)}
-          sx={{
-            color: "#ff7a18",
-            cursor: "pointer",
-            fontWeight: 500
-          }}
-        >
-          {showAll
-            ? "Show Less ←"
-            : "View All Trending →"}
-        </Typography>
+      )}
 
-      </Box>
-
-)}
       {/* EVENT GRID */}
 
       <Box
@@ -165,19 +170,15 @@ const Trending = ({ filters }) => {
 
           <Card
             key={item._id}
-
             sx={{
               borderRadius: "18px",
               background: "#1f1f24",
               color: "white",
               overflow: "hidden",
-
               display: "flex",
               flexDirection: "column",
               height: 420,
-
               transition: "all 0.3s ease",
-
               "&:hover": {
                 transform: "translateY(-8px)",
                 boxShadow: "0 20px 40px rgba(0,0,0,0.6)"
@@ -195,10 +196,7 @@ const Trending = ({ filters }) => {
               }}
             >
 
-              {/* CATEGORY BADGE */}
-
-              {item.category && (
-
+              {item.eventType && (
                 <Box
                   sx={{
                     position: "absolute",
@@ -213,12 +211,9 @@ const Trending = ({ filters }) => {
                     zIndex: 2
                   }}
                 >
-                  {item.category}
+                  {item.eventType?.name}
                 </Box>
-
               )}
-
-              {/* IMAGE */}
 
               <Box
                 sx={{
@@ -227,9 +222,7 @@ const Trending = ({ filters }) => {
                     `url(http://localhost:5000${item.bannerImage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-
                   transition: "transform 0.5s ease",
-
                   ".MuiCard-root:hover &": {
                     transform: "scale(1.08)"
                   }
@@ -255,7 +248,6 @@ const Trending = ({ filters }) => {
                   fontSize: 18,
                   fontWeight: 600,
                   mb: 2,
-
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
@@ -264,9 +256,6 @@ const Trending = ({ filters }) => {
               >
                 {item.eventName}
               </Typography>
-
-
-              {/* DATE */}
 
               <Box
                 sx={{
@@ -299,9 +288,6 @@ const Trending = ({ filters }) => {
 
               </Box>
 
-
-              {/* LOCATION */}
-
               <Box
                 sx={{
                   display: "flex",
@@ -330,7 +316,6 @@ const Trending = ({ filters }) => {
 
             </Box>
 
-
             {/* FOOTER */}
 
             <Box
@@ -354,7 +339,6 @@ const Trending = ({ filters }) => {
                     borderRadius: "30px",
                     textTransform: "none",
                     fontWeight: 600,
-
                     "&:hover": {
                       background:
                         "linear-gradient(45deg,#ff6a00,#ff9a30)"

@@ -13,6 +13,9 @@ import ShieldIcon from "@mui/icons-material/Shield";
 import { useState } from "react";
 import axios from "axios";
 
+
+const ORANGE = "#fe7816";
+
 const Feature = ({ icon, title, text }) => (
   <Box
     sx={{
@@ -77,6 +80,36 @@ await axios.post("http://localhost:5000/api/apply", formData);
       alert("Error sending application");
     }
   };
+
+  const inputStyle = {
+  "& .MuiFilledInput-root": {
+    backgroundColor: "#1c1c26",
+    color: "#fff",
+    borderRadius: "8px"
+  },
+  "& .MuiFilledInput-root:hover": {
+    backgroundColor: "#1c1c26"
+  },
+  "& .MuiFilledInput-root.Mui-focused": {
+    backgroundColor: "#1c1c26"
+  },
+  "& .MuiInputLabel-root": {
+    color: "#aaa"
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: ORANGE
+  },
+  "& .MuiFilledInput-root:after": {
+    borderBottom: `2px solid ${ORANGE}`
+  },
+  "& input": {
+    color: "#fff"
+  },
+  "& input::selection": {
+    backgroundColor: ORANGE,
+    color: "#000"
+  }
+};
 
   return (
     <Box
@@ -220,21 +253,22 @@ await axios.post("http://localhost:5000/api/apply", formData);
             }}
           >
             <Box sx={{ bgcolor: "#111", p: 4, borderRadius: 3, width: 400 }}>
-              <Typography mb={2} fontWeight={600}>
+              <Typography mb={2} fontWeight={600} >
                 Vendor Application
               </Typography>
 
-              <TextField fullWidth label="Name" name="name" onChange={handleChange} sx={{ mb: 2 }} />
-              <TextField fullWidth label="Email" name="email" onChange={handleChange} sx={{ mb: 2 }} />
-              <TextField fullWidth label="Phone" name="phone" onChange={handleChange} sx={{ mb: 2 }} />
-              <TextField fullWidth label="Organization" name="organization" onChange={handleChange} sx={{ mb: 2 }} />
-              <TextField fullWidth label="Event Type" name="eventType" onChange={handleChange} sx={{ mb: 2 }} />
-
-              <Button fullWidth variant="contained" onClick={handleSubmit}>
+              <TextField fullWidth label="Name" name="name"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
+              <TextField fullWidth label="Email" name="email"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
+              <TextField fullWidth label="Phone" name="phone"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
+              <TextField fullWidth label="Organization" name="organization"  variant="filled" onChange={handleChange} sx={{ mb: 2 ,...inputStyle}} />
+            
+              <Button fullWidth variant="contained"
+               sx={{ bgcolor: ORANGE, color: "#000" }}
+                 onClick={handleSubmit}>
                 Submit
               </Button>
 
-              <Button fullWidth sx={{ mt: 1 }} onClick={() => setOpenForm(false)}>
+              <Button fullWidth sx={{ mt: 1,color:ORANGE }} onClick={() => setOpenForm(false)}>
                 Cancel
               </Button>
             </Box>

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Snackbar, Alert } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getEventTicketsRequest } from "../container/ticketcontainer/slice";
+import { getEventsRequest } from "../container/eventcontainer/slice";
+import { registerUserRequest } from "../container/usercontainer/slice";
+import axios from "axios";
 
 import {
   Box,
@@ -35,6 +39,10 @@ const orangeBtn = {
 };
 
 const Detail = () => {
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  const { events } = useSelector((state) => state.events);
+
   const [alert, setAlert] = useState({
     open: false,
     message: "",
@@ -43,8 +51,7 @@ const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [event, setEvent] = useState(null);
-  const [ticketTypes, setTicketTypes] = useState([]);
+  const event = events?.find((e) => e._id === id);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [tickets, setTickets] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -62,60 +69,66 @@ const Detail = () => {
 
   /* ---------------- FETCH ---------------- */
   useEffect(() => {
-    fetch(`http://localhost:5000/api/events/${id}`)
-      .then((res) => res.json())
-      .then(setEvent);
-  }, [id]);
+
+    if (events.length === 0) {
+      dispatch(getEventsRequest());
+    }
+
+  }, [events.length, dispatch]);
+
+  const ticketTypes = useSelector((state) => state.tickets?.tickets || []);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/tickets/event/${id}`)
-      .then((res) => {
-        setTicketTypes(res.data);
-        setSelectedTicket(res.data[0]);
-      });
-  }, [id]);
+    dispatch(getEventTicketsRequest(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (ticketTypes.length > 0) {
+      setSelectedTicket(ticketTypes[0]);
+    }
+  }, [ticketTypes]);
+
+
+  useEffect(() => {
+
+    if (user) {
+
+      const orderData = sessionStorage.getItem("pendingOrder");
+
+      if (orderData) {
+        navigate("/payment", { state: { order: orderData } });
+      }
+
+    }
+
+  }, [user, navigate]);
 
   if (!event) return <Typography>Loading...</Typography>;
 
   const price = selectedTicket?.price || 0;
   const total = tickets * price;
 
-  /* ---------------- HANDLERS ---------------- */
-  const handlePayment = async () => {
+  const handlePayment = () => {
 
-    if (loading) return;
-    setLoading(true);
-
-    try {
-
-      // check if user logged in
-      await axios.get("http://localhost:5000/api/profile", {
-        withCredentials: true
-      });
-
-      const orderData = {
-        eventId: event._id,
-        ticketTypeId: selectedTicket?._id,
-        quantity: tickets,
-        totalAmount: total
-      };
-
-      sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
-
-      navigate("/payment");
-
-    } catch (error) {
-
-      // NOT LOGGED IN → OPEN REGISTER MODAL
+    if (!user || !user._id) {
       setShowAuthModal(true);
-
+      return;
     }
 
-    setLoading(false);
+    const orderData = {
+      eventId: event._id,
+      ticketTypeId: selectedTicket?._id,
+      quantity: tickets,
+      totalAmount: total
+    };
+
+    sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+
+    navigate("/payment", { state: { order: orderData } });
+
   };
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
 
     if (!authForm.name || !authForm.email || !authForm.password) {
       setAlert({
@@ -126,37 +139,17 @@ const Detail = () => {
       return;
     }
 
-    try {
+    const orderData = {
+      eventId: event._id,
+      ticketTypeId: selectedTicket?._id,
+      quantity: tickets,
+      totalAmount: total
+    };
 
-      await axios.post(
-        "http://localhost:5000/api/users/register",
-        authForm,
-        { withCredentials: true }
-      );
+    sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
 
-      setAlert({
-        open: true,
-        message: "Registered successfully",
-        severity: "success"
-      });
+    dispatch(registerUserRequest(authForm));
 
-      setShowAuthModal(false);
-
-      const orderData = JSON.parse(sessionStorage.getItem("pendingOrder"));
-
-      navigate("/payment", {
-        state: { order: orderData }
-      });
-
-    } catch (error) {
-
-      setAlert({
-        open: true,
-        message: error.response?.data?.message || "Registration failed",
-        severity: "error"
-      });
-
-    }
   };
 
   const handleSubmitFeedback = async () => {
@@ -172,7 +165,7 @@ const Detail = () => {
     setRating(5);
     setSubmitting(false);
   };
-
+  console.log("Redux user:", user, typeof user);
   /* ---------------- UI ---------------- */
   return (
     <Box
@@ -208,7 +201,7 @@ const Detail = () => {
           <Typography sx={{ opacity: 0.8 }}>{event.eventLocation}</Typography>
 
           <Typography sx={{ mt: 1, color: "#ff9a00", fontWeight: 600 }}>
-            Starting from ₹{ticketTypes[0]?.price}
+            Starting from ₹{ticketTypes?.[0]?.price || 0}
           </Typography>
 
           <Typography sx={{ mt: 2, maxWidth: 600, opacity: 0.75 }}>
@@ -222,25 +215,45 @@ const Detail = () => {
         sx={{
           display: "grid",
           gridTemplateColumns: "1.2fr 1fr 1fr",
-          gap: 4
+          gap: 4,
+          alignItems: "start"
         }}
       >
         {/* TICKETS */}
         <Box
           sx={{
             ...cardStyle,
+            position: "sticky",
+            top: 120,
+            height: 280,
             display: "flex",
-            flexDirection: "column",
-            maxHeight: 400,
-            overflowY: "auto",
-            p: 2
+            flexDirection: "column"
           }}
         >
           <Typography variant="h6" sx={{ mb: 2 }}>
             Get Your Tickets
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {/* SCROLLABLE TICKET LIST */}
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "auto",
+              pr: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+
+              /* custom scrollbar */
+              "&::-webkit-scrollbar": {
+                width: "6px"
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#ff7917",
+                borderRadius: "10px"
+              }
+            }}
+          >
             {ticketTypes.map((type) => (
               <Box
                 key={type._id}
@@ -258,7 +271,12 @@ const Detail = () => {
                   background:
                     selectedTicket?._id === type._id
                       ? "rgba(255,154,0,0.1)"
-                      : "#111"
+                      : "#111",
+                  transition: "0.2s",
+                  "&:hover": {
+                    borderColor: "#ff9a00",
+                    transform: "translateY(-2px)"
+                  }
                 }}
               >
                 <span>{type.name}</span>
@@ -267,14 +285,14 @@ const Detail = () => {
             ))}
           </Box>
 
-          {/* Ticket quantity selector */}
+          {/* QUANTITY SELECTOR */}
           <Box
             sx={{
-              mt: 3,
+              mt: 2,
               display: "flex",
               alignItems: "center",
-              gap: 2,
-              justifyContent: "center"
+              justifyContent: "center",
+              gap: 2
             }}
           >
             <Button
@@ -286,17 +304,15 @@ const Detail = () => {
                 background: "linear-gradient(90deg,#ff7a18,#ff9a00)",
                 color: "#fff",
                 fontSize: 20,
-                fontWeight: 700,
-                "&:hover": {
-                  opacity: 0.9,
-                  background: "linear-gradient(90deg,#ff7a18,#ff9a00)"
-                }
+                fontWeight: 700
               }}
             >
               −
             </Button>
 
-            <Typography sx={{ fontSize: 18, fontWeight: 600 }}>{tickets}</Typography>
+            <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+              {tickets}
+            </Typography>
 
             <Button
               onClick={() => setTickets((t) => t + 1)}
@@ -307,11 +323,7 @@ const Detail = () => {
                 background: "linear-gradient(90deg,#ff7a18,#ff9a00)",
                 color: "#fff",
                 fontSize: 20,
-                fontWeight: 700,
-                "&:hover": {
-                  opacity: 0.9,
-                  background: "linear-gradient(90deg,#ff7a18,#ff9a00)"
-                }
+                fontWeight: 700
               }}
             >
               +
@@ -321,10 +333,7 @@ const Detail = () => {
           <Typography
             sx={{
               mt: 2,
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              justifyContent: "center"
+              textAlign: "center"
             }}
           >
             Total: <b>₹{total}</b>
@@ -360,7 +369,7 @@ const Detail = () => {
                 style={{
                   fontSize: 24,
                   cursor: "pointer",
-                  color: s <= rating ? "#ff9a00" : "#444"
+                  color: s <= rating ? "#ff7917" : "#444"
                 }}
                 onClick={() => setRating(s)}
               >
@@ -383,10 +392,10 @@ const Detail = () => {
                 color: "#fff",
                 backgroundColor: "#111",
                 borderRadius: "12px",
-                caretColor: "#ff9a00",
+                caretColor: "#ff7917",
                 outline: "none",
                 "& fieldset": { borderColor: "#333" },
-                "&:hover fieldset": { borderColor: "#ff9a00" },
+                "&:hover fieldset": { borderColor: "#ff7917" },
                 "&.Mui-focused fieldset": { borderColor: "#ff9a00" },
                 boxShadow: "none !important"
               },
@@ -450,14 +459,14 @@ const Detail = () => {
                   borderColor: "#ff9a00"
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#ff7a18"
+                  borderColor: "#ff7917"
                 }
               },
               "& .MuiInputLabel-root": {
                 color: "#aaa"
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#ff7a18"
+                color: "#ff7917"
               }
             }}
           />
@@ -481,14 +490,14 @@ const Detail = () => {
                   borderColor: "#ff9a00"
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#ff7a18"
+                  borderColor: "#ff7917"
                 }
               },
               "& .MuiInputLabel-root": {
                 color: "#aaa"
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#ff7a18"
+                color: "#ff7917"
               }
             }}
           />
@@ -512,14 +521,14 @@ const Detail = () => {
                   borderColor: "#ff9a00"
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#ff7a18"
+                  borderColor: "#ff7917"
                 }
               },
               "& .MuiInputLabel-root": {
                 color: "#aaa"
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#ff7a18"
+                color: "#ff7917"
               }
             }}
           />
@@ -542,8 +551,8 @@ const Detail = () => {
               borderRadius: "10px",
               textTransform: "none",
               "&:hover": {
-                borderColor: "#ff9a00",
-                color: "#ff9a00",
+                borderColor: "#ff7917",
+                color: "#ff7917",
                 background: "rgba(255,154,0,0.08)"
               }
             }}

@@ -10,14 +10,18 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const categories = [
-  { name: "Entertainment", color: "#ff4d6d" },
-  { name: "Education", color: "#38bdf8" },
-  { name: "Technology", color: "#22c55e" },
-  { name: "Business", color: "#f59e0b" },
-  { name: "Sports & Fitness", color: "#ef4444" },
-  { name: "Art & Culture", color: "#a855f7" }
+  { label: "Entertainment", value: "entertainment", color: "#ff4d6d" },
+  { label: "Education", value: "education", color: "#38bdf8" },
+  { label: "Technology", value: "technology", color: "#22c55e" },
+  { label: "Business", value: "business", color: "#f59e0b" },
+  { label: "Sports & Fitness", value: "sport&fitness", color: "#ef4444" },
+  { label: "Art & Culture", value: "art&culture", color: "#a855f7" }
 ];
 
 const Hero = ({ onSearch }) => {
@@ -27,17 +31,6 @@ const Hero = ({ onSearch }) => {
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [offset, setOffset] = useState(0);
-
-  /* PARALLAX SCROLL */
-
-  useEffect(() => {
-    const handleScroll = () => setOffset(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  /* LIVE SEARCH */
 
   useEffect(() => {
 
@@ -48,9 +41,9 @@ const Hero = ({ onSearch }) => {
       category
     });
 
-    setIsSearching(searchText || location || date || category);
+    setIsSearching(searchText || location || date);
 
-  }, [searchText, location, date, category]);
+  }, [searchText, location, date, category, onSearch]);
 
 
   const textFieldStyle = {
@@ -91,7 +84,9 @@ const Hero = ({ onSearch }) => {
     <Box
       sx={{
         position: "relative",
-        height: isSearching ? "120px" : "70vh",
+        height: isSearching
+          ? "120px"
+          : { xs: "60vh", md: "70vh" },
         transition: "0.5s ease",
         color: "white",
         display: "flex",
@@ -170,6 +165,7 @@ const Hero = ({ onSearch }) => {
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             gap: 2,
             p: 2,
 
@@ -180,9 +176,9 @@ const Hero = ({ onSearch }) => {
             borderRadius: "18px",
 
             position: isSearching ? "absolute" : "relative",
-            top: isSearching ? 20 : "auto",
+            top: isSearching ? { xs: 10, md: 20 } : "auto",
             zIndex: 5,
-            
+
             left: 0,
             right: 0,
             margin: "auto",
@@ -198,8 +194,10 @@ const Hero = ({ onSearch }) => {
             fullWidth
             placeholder="Search events"
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            sx={{ flex: 2, ...textFieldStyle }}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              setCategory("");
+            }} sx={{  width: "100%", ...textFieldStyle }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -214,7 +212,7 @@ const Hero = ({ onSearch }) => {
             placeholder="Location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            sx={{ flex: 1.5, ...textFieldStyle }}
+            sx={{ width: "100%", ...textFieldStyle }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -228,7 +226,7 @@ const Hero = ({ onSearch }) => {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            sx={{ flex: 1.3, ...textFieldStyle }}
+            sx={{ width: "100%", ...textFieldStyle }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -257,29 +255,27 @@ const Hero = ({ onSearch }) => {
             {categories.map((cat) => (
 
               <Chip
-                key={cat.name}
-                label={cat.name}
+                key={cat.value}
+                label={cat.label}
 
                 onClick={() => {
-                  setCategory(cat.name);
-                  setSearchText(cat.name);
+                  setCategory(cat.value);
                 }}
-
                 sx={{
                   color: "white",
 
                   background:
-                    category === cat.name
+                    category === cat.value
                       ? `linear-gradient(135deg, ${cat.color}, #ffffff22)`
                       : "rgba(255,255,255,0.08)",
 
                   border:
-                    category === cat.name
+                    category === cat.value
                       ? `1px solid ${cat.color}`
                       : "1px solid rgba(255,255,255,0.1)",
 
                   boxShadow:
-                    category === cat.name
+                    category === cat.value
                       ? `0 0 15px ${cat.color}`
                       : "none",
 

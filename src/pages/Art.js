@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getEventsRequest } from "../container/eventcontainer/slice";
 import {
   Box,
   Card,
@@ -14,26 +16,29 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 import card5 from "../images/card5.png";
 
-const SportsFitness = () => {
-  const [events, setEvents] = useState([]);
+const Arts = () => {
+ const dispatch = useDispatch();
+const { events } = useSelector((state) => state.events);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const sportsFitnessEvents = data.events.filter((event) => {
-          const type = event.eventType?.name?.toLowerCase() || "";
-          return type.includes("sports") || type.includes("fitness");
-        });
-        setEvents(sportsFitnessEvents);
-      })
-      .catch(console.error);
-  }, []);
+const [filteredEvents, setFilteredEvents] = useState([]);
+
+useEffect(() => {
+  dispatch(getEventsRequest());
+}, [dispatch]);
+
+useEffect(() => {
+  const artsEvents = events.filter((event) => {
+    const type = event.eventType?.name?.toLowerCase() || "";
+    return type.includes("art") || type.includes("culture");
+  });
+
+  setFilteredEvents(artsEvents);
+}, [events]);
 
   return (
     <Box sx={{ bgcolor: "#0c0c11", color: "#fff" }}>
 
-      {/* ================= HERO ================= */}
+      {/* HERO SECTION */}
 
       <Box
         sx={{
@@ -78,16 +83,16 @@ const SportsFitness = () => {
             variant="h2"
             sx={{ color: "#ff7a18", fontWeight: "bold" }}
           >
-            Sports & Fitness Events
+            Arts & Culture Events
           </Typography>
 
           <Typography variant="h6">
-            Marathons, Tournaments & Fitness Workshops
+            Exhibitions, Cultural Shows & Creative Workshops
           </Typography>
         </Box>
       </Box>
 
-      {/* ================= EVENTS SECTION ================= */}
+      {/* EVENTS SECTION */}
 
       <Box
         sx={{
@@ -99,8 +104,6 @@ const SportsFitness = () => {
           mx: "auto",
         }}
       >
-        {/* Section Title */}
-
         <Typography
           variant="h4"
           sx={{
@@ -112,14 +115,12 @@ const SportsFitness = () => {
             WebkitTextFillColor: "transparent",
           }}
         >
-          Discover Sports & Fitness Events
+          Discover Arts & Culture Events
         </Typography>
 
-        {/* No Events */}
-
-        {events.length === 0 && (
+        {filteredEvents.length === 0 && (
           <Typography align="center">
-            No Sports & Fitness Events Found
+            No Arts Events Found
           </Typography>
         )}
 
@@ -133,7 +134,7 @@ const SportsFitness = () => {
             gap: 3,
           }}
         >
-          {events.map((item) => (
+          {filteredEvents.map((item) => (
             <Card
               key={item._id}
               sx={{
@@ -185,7 +186,7 @@ const SportsFitness = () => {
                     fontSize: "12px",
                   }}
                 >
-                  Sports & Fitness
+                  Arts & Culture
                 </Typography>
 
                 {/* Date Badge */}
@@ -219,7 +220,7 @@ const SportsFitness = () => {
                   variant="body2"
                   sx={{ opacity: 0.7, mb: 2 }}
                 >
-                  {item.eventDescription?.slice(0, 80)}...
+                  {item.description?.slice(0, 80)}...
                 </Typography>
 
                 <Typography
@@ -254,8 +255,7 @@ const SportsFitness = () => {
                   fullWidth
                   variant="contained"
                   sx={{
-                    background:
-                      "linear-gradient(90deg,#ff7a18,#ff9f1c)",
+                    background: "linear-gradient(90deg,#ff7a18,#ff9f1c)",
                     fontWeight: "bold",
                     borderRadius: "50px",
                   }}
@@ -271,4 +271,4 @@ const SportsFitness = () => {
   );
 };
 
-export default SportsFitness;
+export default Arts;

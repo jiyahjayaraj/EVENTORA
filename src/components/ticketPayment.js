@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import CelebrationIcon from "@mui/icons-material/Celebration";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrderRequest, clearLatestOrder } from "../container/ordercontainer/slice";
 
 import {
   Box,
@@ -12,20 +13,30 @@ import {
 } from "@mui/material";
 
 const PaymentPage = () => {
-
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { loading: orderLoading, latestOrder: order, error } =
+    useSelector((state) => state.orders);
   const [orderData, setOrderData] = useState(null);
   const [orderResponse, setOrderResponse] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [processingPayment, setProcessingPayment] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [paymentStarted, setPaymentStarted] = useState(false);
 
   useEffect(() => {
-    let data = location.state?.order || sessionStorage.getItem("pendingOrder");
+    dispatch(clearLatestOrder());
+  }, [dispatch]);
+
+  useEffect(() => {
+    let data = location.state?.order;
+
+    if (!data) {
+      const stored = sessionStorage.getItem("pendingOrder");
+      if (stored) data = JSON.parse(stored);
+    }
 
     if (data) {
       setOrderData(typeof data === "string" ? JSON.parse(data) : data);
@@ -33,48 +44,39 @@ const PaymentPage = () => {
       setErrorMessage("No order data found. Please go back and select tickets.");
     }
 
-    setLoading(false);
+    setPageLoading(false);
   }, [location.state]);
 
-  const handleConfirmPayment = async () => {
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (order && paymentStarted) {
+      setOrderResponse(order);
+      setSuccess(true);
+      sessionStorage.removeItem("pendingOrder");
+    }
+  }, [order]);
+
+  const handleConfirmPayment = () => {
 
     if (!orderData || !selectedMethod) return;
 
-    setProcessingPayment(true);
+    setPaymentStarted(true);
 
-    try {
+    dispatch(
+      createOrderRequest({
+        ...orderData,
+        paymentMethod: selectedMethod
+      })
+    );
 
-      const res = await axios.post(
-        "http://localhost:5000/api/order",
-        orderData,
-        { withCredentials: true }
-      );
-
-      if (res.data && res.data.order) {
-
-        setOrderResponse(res.data.order);
-        setSuccess(true);
-
-        sessionStorage.removeItem("pendingOrder");
-
-      } else {
-        setErrorMessage("Failed to create order.");
-      }
-
-    } catch (error) {
-
-      console.error("ORDER ERROR:", error.response?.data || error.message);
-
-      setErrorMessage(
-        error.response?.data?.message || "Order creation failed."
-      );
-
-    } finally {
-      setProcessingPayment(false);
-    }
   };
 
-  if (loading) {
+  if (pageLoading) {
     return (
       <Box sx={{ minHeight: "100vh", bgcolor: "#0f0f0f", color: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <Typography variant="h6">Preparing your order...</Typography>
@@ -119,7 +121,7 @@ const PaymentPage = () => {
         </Box>
 
         <Typography variant="h6" mb={3}>
-          Amount Paid: ₹{orderResponse.totalAmount}
+          Amount Paid: ₹{orderResponse?.totalAmount}
         </Typography>
 
         <Button
@@ -210,7 +212,7 @@ const PaymentPage = () => {
         <Button
           fullWidth
           variant="contained"
-          disabled={!selectedMethod || processingPayment}
+          disabled={!selectedMethod || orderLoading}
           onClick={handleConfirmPayment}
           sx={{
             py: 1.6,
@@ -222,7 +224,7 @@ const PaymentPage = () => {
             }
           }}
         >
-          {processingPayment
+          {orderLoading
             ? "Processing..."
             : `Pay ₹${orderData?.totalAmount}`}
         </Button>

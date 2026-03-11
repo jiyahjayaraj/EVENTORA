@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getProfileRequest } from "./container/usercontainer/slice";
 
 import Navbar from "./components/navbar";
 import Hero from "./components/hero";
@@ -18,9 +20,16 @@ import Technology from "./pages/Technology";
 import Business from "./pages/Business";
 import Sports from "./pages/Sports";
 import Art from "./pages/Art";
+import MyTickets from "./pages/mytickets";
+import Profile from "./pages/profile";
 
 function App() {
-  const [filters, setFilters] = useState({});
+    const [filters, setFilters] = useState({});
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProfileRequest());
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -62,6 +71,8 @@ function App() {
 
         {/* PAYMENT */}
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/my-tickets" element={<MyTickets />} />
+        <Route path="/profile" element={<Profile/>}/>
 
         {/* CATEGORY PAGES */}
         <Route path="/entertainment" element={<Entertainment />} />

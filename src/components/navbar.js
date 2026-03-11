@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import logo from "../images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
@@ -32,6 +33,8 @@ const navItems = [
 ];
 
 const Navbar = () => {
+
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
@@ -108,7 +111,35 @@ const Navbar = () => {
     const section = document.getElementById(id);
     if (section) section.scrollIntoView({ behavior: "smooth" });
   };
-
+  const inputStyle = {
+    "& .MuiFilledInput-root": {
+      backgroundColor: "#1c1c26",
+      color: "#fff",
+      borderRadius: "8px"
+    },
+    "& .MuiFilledInput-root:hover": {
+      backgroundColor: "#1c1c26"
+    },
+    "& .MuiFilledInput-root.Mui-focused": {
+      backgroundColor: "#1c1c26"
+    },
+    "& .MuiInputLabel-root": {
+      color: "#aaa"
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: ORANGE
+    },
+    "& .MuiFilledInput-root:after": {
+      borderBottom: `2px solid ${ORANGE}`
+    },
+    "& input": {
+      color: "#fff"
+    },
+    "& input::selection": {
+      backgroundColor: ORANGE,
+      color: "#000"
+    }
+  };
   return (
     <>
       <AppBar
@@ -128,12 +159,21 @@ const Navbar = () => {
               alt="logo"
               height={36}
               style={{ cursor: "pointer" }}
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              onClick={() => {
+                navigate("/");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           </Box>
 
           {/* NAVIGATION */}
-          <Stack direction="row" spacing={4}>
+          <Stack
+            direction="row"
+            spacing={4}
+            sx={{
+              display: { xs: "none", md: "flex" }
+            }}
+          >
             {navItems.map((item) => (
               <Typography
                 key={item.label}
@@ -170,12 +210,13 @@ const Navbar = () => {
             {/* CREATE EVENT BUTTON */}
             <Button
               variant="contained"
+              onClick={() => scrollToSection("organizers")}
               sx={{
+                display: { xs: "none", md: "flex" },
                 bgcolor: ORANGE,
                 color: "#000",
                 borderRadius: "20px",
-                fontWeight: 600,
-                "&:hover": { bgcolor: "#ff8c35" }
+                fontWeight: 600
               }}
             >
               Create Event
@@ -209,11 +250,21 @@ const Navbar = () => {
                     }
                   }}
                 >
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/profile");
+                      setAnchorEl(null);
+                    }}
+                  >
                     <PersonIcon sx={{ mr: 1 }} /> My Profile
                   </MenuItem>
 
-                  <MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/my-tickets");
+                      setAnchorEl(null);
+                    }}
+                  >
                     <ConfirmationNumberIcon sx={{ mr: 1 }} /> My Tickets
                   </MenuItem>
 
@@ -244,7 +295,7 @@ const Navbar = () => {
       <Modal open={showModal} onClose={() => setShowModal(false)}>
         <Paper
           sx={{
-            width: 360,
+            width: { xs: "90%", sm: 360 },
             p: 4,
             borderRadius: 3,
             position: "absolute",
@@ -265,6 +316,7 @@ const Navbar = () => {
                 label="Name"
                 variant="filled"
                 fullWidth
+                sx={inputStyle}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
@@ -275,6 +327,7 @@ const Navbar = () => {
               label="Email"
               variant="filled"
               fullWidth
+              sx={inputStyle}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
@@ -285,6 +338,7 @@ const Navbar = () => {
               type="password"
               variant="filled"
               fullWidth
+              sx={inputStyle}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }

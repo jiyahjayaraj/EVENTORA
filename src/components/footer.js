@@ -7,8 +7,20 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import logo from "../images/logo.png";
 
 const Footer = () => {
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
   return (
-    <Box sx={{ bgcolor: "#000", color: "#fff" }}>
+    <Box sx={{
+      bgcolor: "#000", color: "#fff", position: "relative",
+      zIndex: 10
+    }}>
       {/* ================= NEWSLETTER ================= */}
       <Box
         sx={{
@@ -71,27 +83,27 @@ const Footer = () => {
           </Grid>
 
           {/* LINKS */}
+          {/* LINKS */}
           {[
             {
-              title: "Product",
-              links: ["Features", "Pricing", "For Organizers", "Mobile App"],
+              title: "Explore",
+              links: [
+                { label: "Trending Events", id: "events" },
+                { label: "Browse Categories", id: "categories" },
+                { label: "For Organizers", id: "organizers" },
+                { label: "About Eventora", id: "about" }
+              ]
             },
-            {
-              title: "Company",
-              links: ["About Us", "Careers", "Press", "Contact"],
-            },
-            {
-              title: "Resources",
-              links: ["Help Center", "Blog", "API Docs", "Partners"],
+            {title:"Company",
+              links:[{label:"Contact"}]
             },
             {
               title: "Legal",
               links: [
-                "Privacy Policy",
-                "Terms of Service",
-                "Cookie Policy",
-              ],
-            },
+                { label: "Privacy Policy", id: "privacy" },
+                { label: "Terms of Service", id: "terms" }
+              ]
+            }
           ].map((section) => (
             <Grid item xs={6} md={2} key={section.title}>
               <Typography fontWeight={600} mb={2} color="#ff7a18">
@@ -100,16 +112,17 @@ const Footer = () => {
 
               {section.links.map((item) => (
                 <Typography
-                  key={item}
+                  key={item.label}
                   variant="body2"
+                  onClick={() => scrollToSection(item.id)}
                   sx={{
                     color: "#9aa4b2",
                     mb: 1,
                     cursor: "pointer",
-                    "&:hover": { color: "#fff" },
+                    "&:hover": { color: "#fff" }
                   }}
                 >
-                  {item}
+                  {item.label}
                 </Typography>
               ))}
             </Grid>

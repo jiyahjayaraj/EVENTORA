@@ -1,52 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getEventsRequest } from "../container/eventcontainer/slice";
+
 import {
   Box,
-  Grid,
   Card,
   CardContent,
   CardActions,
   Typography,
   Button,
 } from "@mui/material";
+
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-import card3 from "../images/card3.png"; // technology hero image
+import card3 from "../images/card3.png";
 
 const Technology = () => {
-  const [events, setEvents] = useState([]);
+
+  const dispatch = useDispatch();
+  const { events } = useSelector((state) => state.events);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const technologyEvents = data.events.filter(
-          (event) =>
-            event.eventType?.name?.toLowerCase() === "technology"
-        );
-        setEvents(technologyEvents);
-      })
-      .catch(console.error);
-  }, []);
+    dispatch(getEventsRequest());
+  }, [dispatch]);
+
+  const techEvents = events?.filter(
+    (event) =>
+      event.eventType?.name?.toLowerCase() === "technology"
+  );
 
   return (
     <Box sx={{ bgcolor: "#0c0c11", color: "#fff" }}>
-      {/* ================= HERO ================= */}
+
+      {/* HERO */}
+
       <Box
         sx={{
           position: "relative",
           height: "100vh",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center", // horizontal center
+          alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
           pt: 10,
           overflow: "hidden",
         }}
       >
-        {/* BG */}
         <Box
           sx={{
             position: "absolute",
@@ -56,21 +58,17 @@ const Technology = () => {
             backgroundPosition: "center",
             filter: "blur(7px)",
             transform: "scale(1.1)",
-            zIndex: 0,
           }}
         />
 
-        {/* Overlay */}
         <Box
           sx={{
             position: "absolute",
             inset: 0,
             bgcolor: "rgba(0,0,0,0.55)",
-            zIndex: 1,
           }}
         />
 
-        {/* Content */}
         <Box sx={{ position: "relative", zIndex: 2 }}>
           <Typography
             variant="h2"
@@ -78,13 +76,15 @@ const Technology = () => {
           >
             Technology Events
           </Typography>
+
           <Typography variant="h6">
             Tech Talks, Hackathons & Innovation Meetups
           </Typography>
         </Box>
       </Box>
 
-      {/* ================= EVENTS ================= */}
+      {/* EVENTS */}
+
       <Box
         sx={{
           position: "relative",
@@ -95,92 +95,164 @@ const Technology = () => {
           mx: "auto",
         }}
       >
-        <Grid container spacing={3} justifyContent="center">
-          {events.length === 0 && (
-            <Grid item xs={12}>
-              <Typography align="center">
-                No Technology Events Found
-              </Typography>
-            </Grid>
-          )}
+        <Typography
+          variant="h4"
+          sx={{
+            mb: 4,
+            fontWeight: "bold",
+            textAlign: "center",
+            background: "linear-gradient(90deg,#ff7a18,#ff9f1c)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Discover Technology Events
+        </Typography>
 
-          {events.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
-              <Card
+        {techEvents.length === 0 && (
+          <Typography align="center">
+            No Technology Events Found
+          </Typography>
+        )}
+
+        {/* EVENTS GRID */}
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, 320px)",
+            justifyContent: "center",
+            gap: 3,
+          }}
+        >
+          {techEvents.map((item) => (
+            <Card
+              key={item._id}
+              sx={{
+                bgcolor: "#14141c",
+                color: "#fff",
+                borderRadius: 3,
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                transition: "0.3s",
+
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+                },
+
+                "&:hover .event-image": {
+                  transform: "scale(1.1)",
+                },
+              }}
+            >
+              {/* IMAGE */}
+
+              <Box
+                className="event-image"
                 sx={{
-                  height: "100%",
-                  bgcolor: "#14141c",
-                  color: "#fff",
-                  borderRadius: 3,
-                  display: "flex",
-                  flexDirection: "column",
-                  transition: "0.25s",
-                  "&:hover": {
-                    transform: "translateY(-6px)",
-                    boxShadow: 6,
-                  },
+                  height: 200,
+                  backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  position: "relative",
+                  transition: "0.4s",
                 }}
               >
-                {/* Image */}
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    top: 12,
+                    left: 12,
+                    background: "rgba(0,0,0,0.6)",
+                    backdropFilter: "blur(6px)",
+                    color: "#ff7a18",
+                    fontWeight: "bold",
+                    px: 1.5,
+                    py: 0.4,
+                    borderRadius: "20px",
+                    fontSize: "12px",
+                  }}
+                >
+                  Technology
+                </Typography>
+
                 <Box
                   sx={{
-                    height: 200,
-                    backgroundImage: `url(http://localhost:5000${item.bannerImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    position: "absolute",
+                    bottom: 10,
+                    right: 10,
+                    background: "#ff7a18",
+                    color: "#000",
+                    px: 1.2,
+                    py: 0.6,
+                    borderRadius: "8px",
+                    fontWeight: "bold",
+                    fontSize: "12px",
                   }}
-                />
+                >
+                  {new Date(item.eventDate).toLocaleDateString()}
+                </Box>
+              </Box>
 
-                {/* Body */}
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    {item.eventName}
-                  </Typography>
+              {/* BODY */}
 
-                  <Typography
-                    variant="body2"
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                  >
-                    <CalendarMonthIcon
-                      fontSize="small"
-                      sx={{ color: "#ff6a00" }}
-                    />
-                    {item.eventDate}
-                  </Typography>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  {item.eventName}
+                </Typography>
 
-                  <Typography
-                    variant="body2"
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                  >
-                    <LocationOnIcon
-                      fontSize="small"
-                      sx={{ color: "#ff6a00" }}
-                    />
-                    {item.eventLocation}
-                  </Typography>
-                </CardContent>
+                <Typography
+                  variant="body2"
+                  sx={{ opacity: 0.7, mb: 2 }}
+                >
+                  {item.description?.slice(0, 80)}...
+                </Typography>
 
-                {/* Footer */}
-                <CardActions sx={{ mt: "auto", p: 2 }}>
-                  <Button
-                    component={Link}
-                    to={`/details/${item._id}`}
-                    fullWidth
-                    variant="contained"
-                    sx={{
-                      background:
-                        "linear-gradient(90deg, #ff7a18, #ff9f1c)",
-                      fontWeight: "bold",
-                      borderRadius: "50px",
-                    }}
-                  >
-                    View Details
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
+                  <CalendarMonthIcon
+                    fontSize="small"
+                    sx={{ color: "#ff6a00" }}
+                  />
+                  {new Date(item.eventDate).toLocaleDateString()}
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
+                  <LocationOnIcon
+                    fontSize="small"
+                    sx={{ color: "#ff6a00" }}
+                  />
+                  {item.eventLocation}
+                </Typography>
+              </CardContent>
+
+              {/* FOOTER */}
+
+              <CardActions sx={{ mt: "auto", p: 2 }}>
+                <Button
+                  component={Link}
+                  to={`/details/${item._id}`}
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    background: "linear-gradient(90deg,#ff7a18,#ff9f1c)",
+                    fontWeight: "bold",
+                    borderRadius: "50px",
+                  }}
+                >
+                  View Details
+                </Button>
+              </CardActions>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       </Box>
     </Box>
   );

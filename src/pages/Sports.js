@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getEventsRequest } from "../container/eventcontainer/slice";
+
 import {
   Box,
   Card,
@@ -15,20 +18,18 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import card5 from "../images/card5.png";
 
 const SportsFitness = () => {
-  const [events, setEvents] = useState([]);
+
+  const dispatch = useDispatch();
+  const { events } = useSelector((state) => state.events);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const sportsFitnessEvents = data.events.filter((event) => {
-          const type = event.eventType?.name?.toLowerCase() || "";
-          return type.includes("sports") || type.includes("fitness");
-        });
-        setEvents(sportsFitnessEvents);
-      })
-      .catch(console.error);
-  }, []);
+    dispatch(getEventsRequest());
+  }, [dispatch]);
+
+  const sportsFitnessEvents = events?.filter((event) => {
+    const type = event.eventType?.name?.toLowerCase() || "";
+    return type.includes("sports") || type.includes("fitness");
+  });
 
   return (
     <Box sx={{ bgcolor: "#0c0c11", color: "#fff" }}>
@@ -115,9 +116,7 @@ const SportsFitness = () => {
           Discover Sports & Fitness Events
         </Typography>
 
-        {/* No Events */}
-
-        {events.length === 0 && (
+        {sportsFitnessEvents.length === 0 && (
           <Typography align="center">
             No Sports & Fitness Events Found
           </Typography>
@@ -132,7 +131,7 @@ const SportsFitness = () => {
             gap: 4,
           }}
         >
-          {events.map((item) => (
+          {sportsFitnessEvents.map((item) => (
             <Card
               key={item._id}
               sx={{
@@ -232,7 +231,7 @@ const SportsFitness = () => {
                     fontSize="small"
                     sx={{ color: "#ff6a00" }}
                   />
-                  {item.eventDate}
+                  {new Date(item.eventDate).toLocaleDateString()}
                 </Typography>
 
                 <Typography
