@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import logo from "../images/logo.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfileRequest, getProfileFail } from "../container/usercontainer/slice";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
@@ -36,35 +38,46 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user?.user);
   const [isLogin, setIsLogin] = useState(true);
 
+  const [askLocation, setAskLocation] = useState(true);
+  const [locationDenied, setLocationDenied] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    mobile: "",
+    city: "",
+    interests: [],
+    latitude: "",
+    longitude: ""
   });
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/profile", {
-          withCredentials: true
-        });
-        setUser(res.data.user);
-      } catch {
-        setUser(null);
-      }
-    };
-    fetchProfile();
-  }, []);
+    dispatch(getProfileRequest());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isLogin && showModal) {
+      setAskLocation(true);
+    }
+  }, [isLogin, showModal]);
+
+  useEffect(() => {
+  if (showModal) {
+    setLocationDenied(false);
+    setAskLocation(true);
+  }
+}, [showModal]);
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:5000/api/users/login",
         {
           email: formData.email,
@@ -72,8 +85,10 @@ const Navbar = () => {
         },
         { withCredentials: true }
       );
-      setUser(res.data.user);
+
+      dispatch(getProfileRequest()); // fetch user
       setShowModal(false);
+
     } catch {
       alert("Invalid credentials");
     }
@@ -86,7 +101,7 @@ const Navbar = () => {
         formData,
         { withCredentials: true }
       );
-      setUser(res.data.user);
+      dispatch(getProfileRequest());
       setShowModal(false);
     } catch {
       alert("User already exists");
@@ -100,11 +115,31 @@ const Navbar = () => {
         {},
         { withCredentials: true }
       );
-      setUser(null);
+      dispatch(getProfileFail());
       setAnchorEl(null);
     } catch (err) {
       console.error("Logout failed", err);
     }
+  };
+
+  const detectLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+
+        setFormData((prev) => ({
+          ...prev,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        }));
+
+        setAskLocation(false);
+
+      },
+      () => {
+        setLocationDenied(true);
+        setAskLocation(false);
+      }
+    );
   };
 
   const scrollToSection = (id) => {
@@ -343,6 +378,85 @@ const Navbar = () => {
                 setFormData({ ...formData, password: e.target.value })
               }
             />
+
+            <TextField
+              label="Mobile"
+              variant="filled"
+              fullWidth
+              sx={inputStyle}
+              onChange={(e) =>
+                setFormData({ ...formData, mobile: e.target.value })
+              }
+            />
+
+            {!isLogin && askLocation && (
+              <Paper
+                sx={{
+                  p: 2,
+                  bgcolor: "#1c1c26",
+                  borderRadius: 2,
+                  textAlign: "center"
+                }}
+              >
+                <Typography variant="body2" mb={1}>
+                  Allow us to detect your location for better event recommendations?
+                </Typography>
+
+                <Stack direction="row" spacing={2} justifyContent="center">
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{ bgcolor: ORANGE, color: "#000" }}
+                    onClick={detectLocation}
+                  >
+                    Yes
+                  </Button>
+
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ borderColor: "#777", color: "#ccc" }}
+                    onClick={() => {
+                      setAskLocation(false);
+                      setLocationDenied(true);
+                    }}
+                  >
+                    No
+                  </Button>
+                </Stack>
+              </Paper>
+            )}
+            {!isLogin && !askLocation && (locationDenied || !formData.latitude) && (
+              <TextField
+                label="City"
+                variant="filled"
+                fullWidth
+                sx={inputStyle}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+              />
+            )}
+
+            {formData.latitude && (
+              <Typography variant="caption" sx={{ color: "#7CFC00" }}>
+                Location detected successfully ✓
+              </Typography>
+            )}
+
+            <TextField
+              label="Interests (comma separated)"
+              variant="filled"
+              fullWidth
+              sx={inputStyle}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  interests: e.target.value.split(",").map(i => i.trim())
+                })
+              }
+            />
+
 
             <Button
               variant="contained"

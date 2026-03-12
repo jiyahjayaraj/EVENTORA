@@ -1,30 +1,11 @@
 import { Box, Typography, Button } from "@mui/material";
+import { useState } from "react";
 
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import GroupsIcon from "@mui/icons-material/Groups";
 
 import card3 from "../images/main.png";
-
-const cards = [
-  {
-    title: "AI Workshop",
-    match: "98% Match",
-    image: card3,
-  },
-  {
-    title: "Startup Meetup",
-    match: "94% Match",
-    image:
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200",
-  },
-  {
-    title: "Tech Expo",
-    match: "89% Match",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200",
-  },
-];
 
 const features = [
   {
@@ -45,6 +26,57 @@ const features = [
 ];
 
 export default function Smart() {
+
+  const [cards, setCards] = useState([
+    {
+      title: "AI Workshop",
+      match: "98% Match",
+      image: card3,
+    },
+    {
+      title: "Startup Meetup",
+      match: "94% Match",
+      image:
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200",
+    },
+    {
+      title: "Tech Expo",
+      match: "89% Match",
+      image:
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200",
+    },
+  ]);
+
+  const getRecommendations = async () => {
+    try {
+
+      const res = await fetch(
+        "http://localhost:5000/api/recommendations/generate",
+        {
+          credentials: "include",
+        }
+      );
+
+      const data = await res.json();
+
+      console.log("AI Response:", data);
+
+      if (data.recommendedEvents) {
+
+        const formatted = data.recommendedEvents.map((item) => ({
+          title: item.event.eventName,
+          match: item.matchScore + "% Match",
+          image: item.event.bannerImage || card3,
+        }));
+
+        setCards(formatted);
+      }
+
+    } catch (error) {
+      console.error("Recommendation error:", error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -58,7 +90,7 @@ export default function Smart() {
       }}
     >
 
-      {/* LEFT */}
+      {/* LEFT SECTION */}
 
       <Box sx={{ width: "50%" }}>
         <Typography fontSize={42} fontWeight={700} lineHeight={1.2}>
@@ -98,9 +130,6 @@ export default function Smart() {
                 boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
               }}
             >
-
-              {/* ICON */}
-
               <Box
                 sx={{
                   width: 40,
@@ -111,36 +140,26 @@ export default function Smart() {
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
-                  boxShadow: "0 6px 18px rgba(255,122,24,0.5)"
+                  boxShadow: "0 6px 18px rgba(255,122,24,0.5)",
                 }}
               >
                 {item.icon}
               </Box>
 
-
-              {/* TEXT */}
-
               <Box>
-                <Typography fontWeight={600}>
-                  {item.title}
-                </Typography>
-
-                <Typography
-                  fontSize={13}
-                  sx={{ color: "#9aa4b2" }}
-                >
+                <Typography fontWeight={600}>{item.title}</Typography>
+                <Typography fontSize={13} sx={{ color: "#9aa4b2" }}>
                   {item.text}
                 </Typography>
               </Box>
-
             </Box>
           ))}
         </Box>
 
-
         {/* BUTTON */}
 
         <Button
+          onClick={getRecommendations}
           sx={{
             mt: 4,
             px: 3,
@@ -160,11 +179,9 @@ export default function Smart() {
         >
           Get Personalized Recommendations
         </Button>
-
       </Box>
 
-
-      {/* RIGHT – STACKED CARDS */}
+      {/* RIGHT SECTION */}
 
       <Box
         sx={{
@@ -193,7 +210,6 @@ export default function Smart() {
               overflow: "hidden",
             }}
           >
-
             <Box
               sx={{
                 position: "absolute",
@@ -205,9 +221,7 @@ export default function Smart() {
                 alignItems: "center",
               }}
             >
-              <Typography fontWeight={600}>
-                {card.title}
-              </Typography>
+              <Typography fontWeight={600}>{card.title}</Typography>
 
               <Box
                 sx={{
@@ -216,18 +230,15 @@ export default function Smart() {
                   borderRadius: 999,
                   fontSize: 12,
                   fontWeight: 600,
-                  background:
-                    "linear-gradient(135deg, #a855f7, #ec4899)",
+                  background: "linear-gradient(135deg, #a855f7, #ec4899)",
                 }}
               >
                 {card.match}
               </Box>
             </Box>
-
           </Box>
         ))}
       </Box>
-
     </Box>
   );
 }

@@ -12,7 +12,7 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import ShieldIcon from "@mui/icons-material/Shield";
 import { useState } from "react";
 import axios from "axios";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const ORANGE = "#fe7816";
 
@@ -56,7 +56,7 @@ const Feature = ({ icon, title, text }) => (
 );
 
 export default function Landing() {
-
+  const [openLearn, setOpenLearn] = useState(false);
   const [openForm, setOpenForm] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -73,7 +73,7 @@ export default function Landing() {
 
   const handleSubmit = async () => {
     try {
-await axios.post("http://localhost:5000/api/apply", formData);
+      await axios.post("http://localhost:5000/api/apply", formData);
       alert("Application sent successfully!");
       setOpenForm(false);
     } catch (error) {
@@ -82,34 +82,34 @@ await axios.post("http://localhost:5000/api/apply", formData);
   };
 
   const inputStyle = {
-  "& .MuiFilledInput-root": {
-    backgroundColor: "#1c1c26",
-    color: "#fff",
-    borderRadius: "8px"
-  },
-  "& .MuiFilledInput-root:hover": {
-    backgroundColor: "#1c1c26"
-  },
-  "& .MuiFilledInput-root.Mui-focused": {
-    backgroundColor: "#1c1c26"
-  },
-  "& .MuiInputLabel-root": {
-    color: "#aaa"
-  },
-  "& .MuiInputLabel-root.Mui-focused": {
-    color: ORANGE
-  },
-  "& .MuiFilledInput-root:after": {
-    borderBottom: `2px solid ${ORANGE}`
-  },
-  "& input": {
-    color: "#fff"
-  },
-  "& input::selection": {
-    backgroundColor: ORANGE,
-    color: "#000"
-  }
-};
+    "& .MuiFilledInput-root": {
+      backgroundColor: "#1c1c26",
+      color: "#fff",
+      borderRadius: "8px"
+    },
+    "& .MuiFilledInput-root:hover": {
+      backgroundColor: "#1c1c26"
+    },
+    "& .MuiFilledInput-root.Mui-focused": {
+      backgroundColor: "#1c1c26"
+    },
+    "& .MuiInputLabel-root": {
+      color: "#aaa"
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: ORANGE
+    },
+    "& .MuiFilledInput-root:after": {
+      borderBottom: `2px solid ${ORANGE}`
+    },
+    "& input": {
+      color: "#fff"
+    },
+    "& input::selection": {
+      backgroundColor: ORANGE,
+      color: "#000"
+    }
+  };
 
   return (
     <Box
@@ -209,6 +209,7 @@ await axios.post("http://localhost:5000/api/apply", formData);
             </Typography>
           </Box>
 
+
           <Stack direction="row" spacing={2}>
             <Button
               variant="outlined"
@@ -217,6 +218,7 @@ await axios.post("http://localhost:5000/api/apply", formData);
                 color: "#fff",
                 borderColor: "rgba(255,255,255,0.25)",
               }}
+              onClick={() => setOpenLearn(true)}
             >
               LEARN MORE
             </Button>
@@ -245,6 +247,55 @@ await axios.post("http://localhost:5000/api/apply", formData);
               left: 0,
               width: "100%",
               height: "100%",
+              bgcolor: "rgba(0,0,0,0.75)",
+              backdropFilter: "blur(3px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 999,
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor: "#111",
+                p: 5,
+                borderRadius: "16px",
+                width: 420,
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0px 0px 60px rgba(254,120,22,0.35)",
+                backdropFilter: "blur(6px)"
+              }}
+            >
+              <Typography mb={2} fontWeight={600} >
+                Vendor Application
+              </Typography>
+
+              <TextField fullWidth label="Name" name="name" variant="filled" onChange={handleChange} sx={{ mb: 2, ...inputStyle }} />
+              <TextField fullWidth label="Email" name="email" variant="filled" onChange={handleChange} sx={{ mb: 2, ...inputStyle }} />
+              <TextField fullWidth label="Phone" name="phone" variant="filled" onChange={handleChange} sx={{ mb: 2, ...inputStyle }} />
+              <TextField fullWidth label="Organization" name="organization" variant="filled" onChange={handleChange} sx={{ mb: 2, ...inputStyle }} />
+
+              <Button fullWidth variant="contained"
+                sx={{ bgcolor: ORANGE, color: "#000" }}
+                onClick={handleSubmit}>
+                Submit
+              </Button>
+
+              <Button fullWidth sx={{ mt: 1, color: ORANGE }} onClick={() => setOpenForm(false)}>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        {openLearn && (
+          <Box
+            sx={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
               bgcolor: "rgba(0,0,0,0.7)",
               display: "flex",
               alignItems: "center",
@@ -252,29 +303,57 @@ await axios.post("http://localhost:5000/api/apply", formData);
               zIndex: 999,
             }}
           >
-            <Box sx={{ bgcolor: "#111", p: 4, borderRadius: 3, width: 400 }}>
-              <Typography mb={2} fontWeight={600} >
-                Vendor Application
+            <Box
+              sx={{
+                bgcolor: "#111",
+                p: 5,
+                borderRadius: "16px",
+                width: 500,
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0px 0px 60px rgba(254,120,22,0.35)",
+                backdropFilter: "blur(6px)"
+              }}
+            >
+              <Typography fontWeight={700} fontSize={20} mb={2}>
+                Why Become a Vendor?
               </Typography>
 
-              <TextField fullWidth label="Name" name="name"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
-              <TextField fullWidth label="Email" name="email"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
-              <TextField fullWidth label="Phone" name="phone"  variant="filled" onChange={handleChange} sx={{ mb: 2,...inputStyle }} />
-              <TextField fullWidth label="Organization" name="organization"  variant="filled" onChange={handleChange} sx={{ mb: 2 ,...inputStyle}} />
-            
-              <Button fullWidth variant="contained"
-               sx={{ bgcolor: ORANGE, color: "#000" }}
-                 onClick={handleSubmit}>
-                Submit
-              </Button>
+              <Typography sx={{ opacity: 0.7, mb: 2 }}>
+                Eventora helps event organizers grow their events and reach
+                thousands of attendees effortlessly.
+              </Typography>
 
-              <Button fullWidth sx={{ mt: 1,color:ORANGE }} onClick={() => setOpenForm(false)}>
-                Cancel
+              <Stack spacing={1.2}>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <CheckCircleIcon sx={{ color: ORANGE, fontSize: 18 }} />
+                  <Typography sx={{ opacity: 0.7}}>Sell tickets easily with secure payments</Typography>
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <CheckCircleIcon sx={{ color: ORANGE, fontSize: 18 }} />
+                  <Typography sx={{ opacity: 0.7}}>Track revenue and attendee analytics</Typography>
+                </Stack>
+
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <CheckCircleIcon sx={{ color: ORANGE, fontSize: 18 }} />
+                  <Typography sx={{ opacity: 0.7}}> Promote events to a wider audience</Typography>
+                </Stack>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <CheckCircleIcon sx={{ color: ORANGE, fontSize: 18 }} />
+                  <Typography sx={{ opacity: 0.7}}> Get instant payouts and reliable support</Typography>
+                </Stack>
+              </Stack>
+
+              <Button
+                fullWidth
+                sx={{ mt: 1, color: ORANGE }}
+                onClick={() => setOpenLearn(false)}
+              >
+                Close
               </Button>
             </Box>
           </Box>
         )}
-
       </Container>
     </Box>
   );
