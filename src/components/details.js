@@ -142,7 +142,22 @@ const Detail = () => {
 
   };
 
-  const handleSubmitFeedback = async () => {
+const handleSubmitFeedback = async () => {
+
+  // ✅ CHECK USER LOGIN
+  if (!user || !user._id) {
+
+    setAlert({
+      open: true,
+      message: "Please login to submit feedback",
+      severity: "warning"
+    });
+
+    return;
+  }
+
+  try {
+
     setSubmitting(true);
 
     await axios.post(
@@ -153,8 +168,31 @@ const Detail = () => {
 
     setComment("");
     setRating(5);
+
+    setAlert({
+      open: true,
+      message: "Feedback submitted successfully",
+      severity: "success"
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    setAlert({
+      open: true,
+      message:
+        error?.response?.data?.message ||
+        "Failed to submit feedback",
+      severity: "error"
+    });
+
+  } finally {
+
     setSubmitting(false);
-  };
+
+  }
+};
   console.log("Redux user:", user, typeof user);
   /* ---------------- UI ---------------- */
   return (
