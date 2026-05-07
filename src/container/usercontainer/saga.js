@@ -17,10 +17,14 @@ function* registerUserSaga(action) {
   try {
 
     const response = yield call(
-      axios.post,
-      "http://localhost:5000/api/users/register",
-      action.payload,
-      { withCredentials: true }
+      axios.get,
+      "http://localhost:5000/api/my-orders",
+      {
+      //   params: {
+      //     userId: "69fc202b6083e235c3593e8d"
+      //   },
+        withCredentials: true
+      }
     );
 
     yield put(registerUserSuccess(response.data));

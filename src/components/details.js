@@ -21,8 +21,8 @@ const cardStyle = {
   background: "#0b0b0f",
   borderRadius: "18px",
   padding: "28px",
-  boxShadow: "0 10px 35px rgba(0,0,0,0.6)",
-  border: "1px solid #1b1b1f"
+  boxShadow: "0 10px 35px rgba(0,0,0,0.6), 0 0 15px rgba(255,122,24,0.1)",
+  border: "1px solid rgba(255,122,24,0.3)"
 };
 
 const orangeBtn = {
@@ -89,19 +89,7 @@ const Detail = () => {
   }, [ticketTypes]);
 
 
-  useEffect(() => {
 
-    if (user) {
-
-      const orderData = sessionStorage.getItem("pendingOrder");
-
-      if (orderData) {
-        navigate("/payment", { state: { order: orderData } });
-      }
-
-    }
-
-  }, [user, navigate]);
 
   if (!event) return <Typography>Loading...</Typography>;
 
@@ -116,7 +104,8 @@ const Detail = () => {
     }
 
     const orderData = {
-      eventId: event._id,
+      eventId: event._id, 
+      eventName: event.eventName,
       ticketTypeId: selectedTicket?._id,
       quantity: tickets,
       totalAmount: total
@@ -141,6 +130,7 @@ const Detail = () => {
 
     const orderData = {
       eventId: event._id,
+      eventName: event.eventName,
       ticketTypeId: selectedTicket?._id,
       quantity: tickets,
       totalAmount: total
@@ -197,6 +187,8 @@ const Detail = () => {
           <Typography sx={{ mt: 1, opacity: 0.8 }}>
             {new Date(event.eventDate).toDateString()}
           </Typography>
+
+          <Typography>{event.city}</Typography>
 
           <Typography sx={{ opacity: 0.8 }}>{event.eventLocation}</Typography>
 

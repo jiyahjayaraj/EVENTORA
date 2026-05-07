@@ -31,13 +31,17 @@ function* createOrderSaga(action) {
 
 }
 
-function* getMyOrdersSaga() {
+function* getMyOrdersSaga(action) {
+
+  console.log("==action", action);
+  
 
   try {
 
     const response = yield call(
       axios.get,
       "http://localhost:5000/api/my-orders",
+       action.payload,
       { withCredentials: true }
     );
 

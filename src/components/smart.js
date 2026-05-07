@@ -1,7 +1,8 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import PsychologyIcon from "@mui/icons-material/Psychology";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import GroupsIcon from "@mui/icons-material/Groups";
 
@@ -9,9 +10,9 @@ import card3 from "../images/main.png";
 
 const features = [
   {
-    icon: <PsychologyIcon sx={{ color: "white", fontSize: 20 }} />,
-    title: "Smart Learning",
-    text: "Our AI learns from your browsing history and past bookings",
+    icon: <LocationOnIcon sx={{ color: "white", fontSize: 20 }} />,
+    title: "Nearby Events",
+    text: "Find exciting events happening around you based on your location",
   },
   {
     icon: <AutoAwesomeIcon sx={{ color: "white", fontSize: 20 }} />,
@@ -47,34 +48,10 @@ export default function Smart() {
     },
   ]);
 
-  const getRecommendations = async () => {
-    try {
+  const navigate = useNavigate();
 
-      const res = await fetch(
-        "http://localhost:5000/api/recommendations/generate",
-        {
-          credentials: "include",
-        }
-      );
-
-      const data = await res.json();
-
-      console.log("AI Response:", data);
-
-      if (data.recommendedEvents) {
-
-        const formatted = data.recommendedEvents.map((item) => ({
-          title: item.event.eventName,
-          match: item.matchScore + "% Match",
-          image: item.event.bannerImage || card3,
-        }));
-
-        setCards(formatted);
-      }
-
-    } catch (error) {
-      console.error("Recommendation error:", error);
-    }
+  const getRecommendations = () => {
+    navigate("/recommendations");
   };
 
   return (
@@ -109,9 +86,10 @@ export default function Smart() {
             maxWidth: 520,
           }}
         >
-          Our intelligent recommendation engine analyzes your preferences,
-          past bookings, and browsing behavior to suggest events you'll love.
-          The more you explore, the smarter it gets.
+          Our smart event discovery system helps you find the perfect events bycombining 
+          location-based discovery, personalized recommendations, and community insights.
+          Explore events happening near you, discover experiences tailored to your interests,
+          and see what others with similar tastes are enjoying.
         </Typography>
 
         {/* FEATURES */}

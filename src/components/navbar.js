@@ -69,11 +69,11 @@ const Navbar = () => {
   }, [isLogin, showModal]);
 
   useEffect(() => {
-  if (showModal) {
-    setLocationDenied(false);
-    setAskLocation(true);
-  }
-}, [showModal]);
+    if (showModal) {
+      setLocationDenied(false);
+      setAskLocation(true);
+    }
+  }, [showModal]);
 
   const handleLogin = async () => {
     try {
@@ -109,22 +109,32 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await axios.post(
-        "http://localhost:5000/api/users/logout",
-        {},
-        { withCredentials: true }
-      );
-      dispatch(getProfileFail());
-      setAnchorEl(null);
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
-  };
+  try {
+    await axios.post(
+      "http://localhost:5000/api/users/logout",
+      {},
+      { withCredentials: true }
+    );
+
+    dispatch(getProfileFail());
+    setAnchorEl(null);
+
+    navigate("/"); // 👈 redirect to home page
+
+  } catch (err) {
+    console.error("Logout failed", err);
+  }
+};
 
   const detectLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
+
+        console.log(
+          "GPS detected:",
+          position.coords.latitude,
+          position.coords.longitude
+        );
 
         setFormData((prev) => ({
           ...prev,
@@ -135,7 +145,8 @@ const Navbar = () => {
         setAskLocation(false);
 
       },
-      () => {
+      (error) => {
+        console.log("Location error:", error);
         setLocationDenied(true);
         setAskLocation(false);
       }
@@ -379,15 +390,17 @@ const Navbar = () => {
               }
             />
 
-            <TextField
-              label="Mobile"
-              variant="filled"
-              fullWidth
-              sx={inputStyle}
-              onChange={(e) =>
-                setFormData({ ...formData, mobile: e.target.value })
-              }
-            />
+            {!isLogin && (
+              <TextField
+                label="Mobile"
+                variant="filled"
+                fullWidth
+                sx={inputStyle}
+                onChange={(e) =>
+                  setFormData({ ...formData, mobile: e.target.value })
+                }
+              />
+            )}
 
             {!isLogin && askLocation && (
               <Paper
@@ -398,7 +411,7 @@ const Navbar = () => {
                   textAlign: "center"
                 }}
               >
-                <Typography variant="body2" mb={1}>
+                <Typography variant="body2" mb={1} sx={{ color: "#fff" }}>
                   Allow us to detect your location for better event recommendations?
                 </Typography>
 
@@ -444,18 +457,20 @@ const Navbar = () => {
               </Typography>
             )}
 
-            <TextField
-              label="Interests (comma separated)"
-              variant="filled"
-              fullWidth
-              sx={inputStyle}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  interests: e.target.value.split(",").map(i => i.trim())
-                })
-              }
-            />
+            {!isLogin && (
+              <TextField
+                label="Interests (comma separated)"
+                variant="filled"
+                fullWidth
+                sx={inputStyle}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    interests: e.target.value.split(",").map(i => i.trim())
+                  })
+                }
+              />
+            )}
 
 
             <Button

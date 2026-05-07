@@ -12,6 +12,8 @@ import Organizer from "./components/organizer";
 import Footer from "./components/footer";
 import Detail from "./components/details";
 import PaymentPage from "./components/ticketPayment";
+import Recommendations from "./pages/Recommendations";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Category pages
 import Entertainment from "./pages/Entertainment";
@@ -33,6 +35,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       {/* NAVBAR ALWAYS VISIBLE */}
       <Navbar />
 
@@ -57,7 +60,6 @@ function App() {
               <section >
                 <Smart />
               </section>
-
       
               <section id="organizers">
                 <Organizer />
@@ -68,6 +70,9 @@ function App() {
 
         {/* EVENT DETAILS */}
         <Route path="/details/:id" element={<Detail />} />
+        
+        {/* RECOMMENDATIONS */}
+        <Route path="/recommendations" element={<Recommendations />} />
 
         {/* PAYMENT */}
         <Route path="/payment" element={<PaymentPage />} />
